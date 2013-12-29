@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Lockitron</string>
+    <string name="glass_voice_trigger">open the door</string>
+</resources>
