@@ -8,9 +8,4 @@ public class UnlockService extends CommandService {
         run(CommandTask.UNLOCK);
         return START_NOT_STICKY;
     }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
 }

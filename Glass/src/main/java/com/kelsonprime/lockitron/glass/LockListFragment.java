@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,13 @@ import android.widget.TextView;
 
 import com.kelsonprime.lockitron.Lockitron;
 import com.kelsonprime.lockitron.Lock;
+import com.kelsonprime.lockitron.User;
 
 import java.util.ArrayList;
 
 public class LockListFragment extends ListFragment {
     private static final String EXTRA_TOKEN = "TOKEN";
+    private static final String TAG = "LockListFragment";
     private String token;
     private ArrayList<Lock> mLocks;
     private Callbacks mCallbacks;
@@ -57,8 +60,11 @@ public class LockListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         token = getArguments().getString(EXTRA_TOKEN);
-        mLocks = Lockitron.user(token).locks();
+        User lockitronUser = new Lockitron(getActivity().getApplicationContext()).user(token);
+        Log.d(TAG, "My token is " + token);
+        mLocks = lockitronUser.getLocks();
         LockAdapter adapter = new LockAdapter(mLocks);
+        lockitronUser.setLocksAdapter(adapter);
         setListAdapter(adapter);
     }
 

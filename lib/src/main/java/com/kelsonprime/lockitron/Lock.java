@@ -16,8 +16,4 @@ public class Lock {
     public String getName() {
         return name;
     }
-
-    public static Lock fake() {
-        return new Lock("crapcracp", "Lock");
-    }
 }

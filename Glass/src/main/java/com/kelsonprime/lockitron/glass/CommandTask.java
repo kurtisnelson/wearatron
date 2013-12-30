@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.glass.media.Sounds;
+import com.kelsonprime.lockitron.Lockitron;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +24,8 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
     private static final String TAG = "CommandTask";
     public static final String UNLOCK = "unlock";
     public static final String LOCK = "lock";
-    private final String ENDPOINT = "https://api.lockitron.com/v1/";
+    private static final int SOCKET_TIMEOUT = 10000;
+
     private final AudioManager audio;
     private final RequestQueue queue;
     private final Context context;
@@ -40,7 +43,7 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
 
     private JsonObjectRequest buildRequest(String command){
         //curl -i -F "access_token=STUFF" https://api.lockitron.com/v1/locks/UUID/unlock
-        String url = ENDPOINT + "locks/"+lockUUID+"/"+command;
+        String url = Lockitron.ENDPOINT + "locks/"+lockUUID+"/"+command;
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, getParams(), new Response.Listener<JSONObject>() {
 
@@ -66,6 +69,7 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
                 audio.playSoundEffect(Sounds.ERROR);
             }
         });
+        jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         jsObjRequest.setShouldCache(false);
         Log.v(TAG, url);
         return jsObjRequest;

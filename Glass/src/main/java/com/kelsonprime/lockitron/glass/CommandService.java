@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.util.Log;
 
 
 public class CommandService extends Service{
     public static final String PREFS_NAME = "server";
     public static final String PREFS_UUID = "uuid";
     public static final String PREFS_TOKEN = "token";
+    private static final String TAG = "CommandService";
     private String lockUUID;
     private String token;
 
@@ -30,7 +32,9 @@ public class CommandService extends Service{
     protected void run(String c){
         if(hasCredentials()){
             new CommandTask(this.getApplicationContext(), token, lockUUID).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, c);
+            Log.d(TAG, "Executed task");
         }
+        stopSelf();
     }
 
     private boolean hasCredentials() {
