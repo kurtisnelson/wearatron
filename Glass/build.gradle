@@ -21,10 +21,19 @@ android {
         targetSdkVersion 15
     }
 
+    signingConfigs {
+        myConfig {
+            storeFile file("/Users/kurt/BTSync/android-keystore")
+            keyAlias "com.thisisnotajoke"
+        }
+    }
+
     buildTypes {
         release {
             runProguard false
+            debuggable false
             proguardFile getDefaultProguardFile('proguard-android.txt')
+            signingConfig signingConfigs.myConfig
         }
     }
     productFlavors {
