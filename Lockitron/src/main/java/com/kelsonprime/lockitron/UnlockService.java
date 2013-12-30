@@ -2,18 +2,13 @@ package com.kelsonprime.lockitron;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.IBinder;
-import com.android.volley.RequestQueue;
 
 public class UnlockService extends Service {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
     public int onStartCommand(Intent intent, int flags, int startId) {
-        stopSelf(startId);
-        return START_REDELIVER_INTENT;
+        new CommandTask(this.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "unlock");
+        return START_NOT_STICKY;
     }
 
     @Override
