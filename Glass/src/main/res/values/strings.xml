@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Lockitron</string>
+    <string name="glass_voice_trigger">my door</string>
+    <string name="unlock_service">unlock</string>
+    <string name="lock_service">lock</string>
+    <string name="authentication_error">You do not have permission to unlock the door</string>
+</resources>
