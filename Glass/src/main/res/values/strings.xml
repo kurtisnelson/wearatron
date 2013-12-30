@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Lockitron</string>
-    <string name="glass_voice_trigger">my door</string>
-    <string name="unlock_service">unlock</string>
-    <string name="lock_service">lock</string>
-    <string name="configure_activity">change</string>
+    <string name="glass_voice_trigger">control my home</string>
+    <string name="unlock_service">unlock door</string>
+    <string name="lock_service">lock door</string>
+    <string name="configure_activity">select door</string>
     <string name="authentication_error">You do not have permission to unlock the door</string>
 </resources>
