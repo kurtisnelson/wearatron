@@ -25,7 +25,7 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
     private static final String TAG = "CommandTask";
     public static final String UNLOCK = "unlock";
     public static final String LOCK = "lock";
-    private static final int SOCKET_TIMEOUT = 10000;
+    private static final int SOCKET_TIMEOUT = 15000;
 
     private final AudioManager audio;
     private final RequestQueue queue;
@@ -73,7 +73,11 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
                             Toast.makeText(context, R.string.authentication_error, Toast.LENGTH_SHORT).show();
                     }
                 }
-                audio.playSoundEffect(Sounds.ERROR);
+                if(Build.PRODUCT.equals("glass_1")) {
+                    audio.playSoundEffect(Sounds.ERROR);
+                }else{
+                    Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

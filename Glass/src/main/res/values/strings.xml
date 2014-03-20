@@ -6,4 +6,5 @@
     <string name="configure_activity">select a door</string>
     <string name="authentication_error">You do not have permission to unlock the door</string>
     <string name="success">Success!</string>
+    <string name="error">Network Error</string>
 </resources>
