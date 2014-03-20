@@ -41,7 +41,7 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
         audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
 
-    private JsonObjectRequest buildRequest(String command){
+    private JsonObjectRequest buildRequest(final String command){
         //curl -i -F "access_token=STUFF" https://api.lockitron.com/v1/locks/UUID/unlock
         String url = Lockitron.ENDPOINT + "locks/"+lockUUID+"/"+command;
 
@@ -49,7 +49,8 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d(TAG, "Command success");
+                Log.d(TAG, command + " success");
+                Toast.makeText(context, R.string.success, Toast.LENGTH_SHORT).show();
                 audio.playSoundEffect(Sounds.SUCCESS);
             }
         }, new Response.ErrorListener() {

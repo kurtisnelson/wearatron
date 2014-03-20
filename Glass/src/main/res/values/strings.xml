@@ -3,6 +3,7 @@
     <string name="glass_voice_trigger">control my home</string>
     <string name="unlock_service">unlock door</string>
     <string name="lock_service">lock door</string>
-    <string name="configure_activity">select door</string>
+    <string name="configure_activity">select a door</string>
     <string name="authentication_error">You do not have permission to unlock the door</string>
+    <string name="success">Success!</string>
 </resources>
