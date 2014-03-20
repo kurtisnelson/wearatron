@@ -3,6 +3,7 @@ package com.kelsonprime.lockitron.glass;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -50,8 +51,13 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d(TAG, command + " success");
-                Toast.makeText(context, R.string.success, Toast.LENGTH_SHORT).show();
-                audio.playSoundEffect(Sounds.SUCCESS);
+
+                if(Build.PRODUCT.equals("glass_1")) {
+                    audio.playSoundEffect(Sounds.SUCCESS);
+                }else{
+                    Toast.makeText(context, R.string.success, Toast.LENGTH_SHORT).show();
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
