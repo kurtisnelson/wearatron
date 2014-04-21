@@ -13,12 +13,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion "Google Inc.:Glass Development Kit Sneak Peek:15"
-    buildToolsVersion "19.0.0"
+    compileSdkVersion "Google Inc.:Glass Development Kit Preview:19"
+    buildToolsVersion "19.0.3"
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 15
+        minSdkVersion 19
+        targetSdkVersion 19
     }
 
     signingConfigs {
@@ -44,8 +44,7 @@ android {
 }
 
 dependencies {
-    compile project(':volley')
     compile project(':lib')
     compile "com.google.zxing:android-integration:2.2"
-    compile 'com.android.support:support-v4:13.0.0'
+    compile 'com.android.support:support-v4:19.0.0'
 }
