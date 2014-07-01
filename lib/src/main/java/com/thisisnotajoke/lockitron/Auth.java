@@ -1,82 +1,86 @@
 package com.thisisnotajoke.lockitron;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.support.v4.app.FragmentActivity;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-import com.google.api.client.auth.oauth2.BearerToken;
-import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.kelsonprime.lockitron.R;
-import com.wuman.android.auth.AuthorizationFlow;
-import com.wuman.android.auth.AuthorizationUIController;
-import com.wuman.android.auth.DialogFragmentController;
-import com.wuman.android.auth.OAuthManager;
-import com.wuman.android.auth.oauth2.store.SharedPreferencesCredentialStore;
 
-import java.io.IOException;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.model.SignatureType;
+import org.scribe.model.Token;
+import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
+
 
 public class Auth {
     private static final String PREF_STORE = "LockitronOauth";
-    private com.google.api.client.auth.oauth2.Credential mCredential;
-    private String mUserId;
-    private AuthorizationFlow mFlow;
-    private SharedPreferencesCredentialStore mCredentialStore;
+    public static final String REDIRECT_URI	= "http://localhost";
+    private static final String TAG = "Auth";
+    private OAuthService mService;
+    private TokenCallback mCallback;
 
-    public Auth(Context context, String userId) {
-        mUserId = userId;
-        mCredentialStore = new SharedPreferencesCredentialStore(context, PREF_STORE, new JacksonFactory());
-        try {
-            mCredentialStore.load(userId, mCredential);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public interface TokenCallback {
+        public void token(Token token);
     }
 
-    public void authenticate(FragmentActivity activity) {
-        buildFlow(activity.getResources());
-        AuthorizationUIController controller =
-                new DialogFragmentController(activity.getSupportFragmentManager()) {
+    public Auth(Context context) {
+        mService = new ServiceBuilder()
+                .provider(LockitronApi.class)
+                .apiKey(context.getString(R.string.oauth_id))
+                .apiSecret(context.getString(R.string.oauth_secret))
+                .signatureType(SignatureType.QueryString)
+                .callback(REDIRECT_URI)
+                .build();
+    }
 
-                    @Override
-                    public String getRedirectUri() throws IOException {
-                        return "http://localhost/Callback";
+    public void getToken(TokenCallback cb, WebView webView) {
+        mCallback = cb;
+        driveWebview(webView);
+    }
+
+    public void driveWebview(WebView webView) {
+        String authUrl = mService.getAuthorizationUrl(null);
+        webView.loadUrl(authUrl);
+        Log.w(TAG, authUrl);
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //Log.d(TAG, "** in shouldOverrideUrlLoading(), url is: " + url);
+                if ( url.startsWith(Auth.REDIRECT_URI) ) {
+                    // extract OAuth2 access_token appended in url
+                    if ( url.indexOf("code=") != -1 ) {
+                        String[] sArray = url.split("code=");
+                        verify(sArray[1]);
                     }
 
-                    @Override
-                    public boolean isJavascriptEnabledForWebView() {
-                        return true;
-                    }
+                    // don't go to redirectUri
+                    return true;
+                }
 
-                };
-
-        OAuthManager oauth = new OAuthManager(mFlow, controller);
-        try {
-            mCredential = oauth.authorizeImplicitly(mUserId, null, null).getResult();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                // load the webpage from url (login and grant access)
+                return super.shouldOverrideUrlLoading(view, url); // return false;
+            }
+        });
     }
 
-    public String getToken(){
-        if(mCredential == null){
-            return null;
-        }
-        return mCredential.getAccessToken();
-    }
+    private void verify(String token) {
+        new AsyncTask<String, Void, Token>() {
 
-    private void buildFlow(Resources res){
-        AuthorizationFlow.Builder builder = new AuthorizationFlow.Builder(
-                BearerToken.authorizationHeaderAccessMethod(),
-                AndroidHttp.newCompatibleTransport(),
-                new JacksonFactory(),
-                new GenericUrl(res.getString(R.string.token_endpoint)),
-                new ClientParametersAuthentication(res.getString(R.string.oauth_id), res.getString(R.string.oauth_secret)),
-                res.getString(R.string.oauth_id),
-                res.getString(R.string.auth_endpoint));
-        builder.setCredentialStore(mCredentialStore);
-        mFlow = builder.build();
+            @Override
+            protected Token doInBackground(String... params) {
+                Verifier verifier = new Verifier(params[0]);
+                return mService.getAccessToken(null, verifier);
+            }
+
+            @Override
+            protected void onPostExecute(Token token) {
+                super.onPostExecute(token);
+                mCallback.token(token);
+            }
+        }.execute(token);
     }
 }
