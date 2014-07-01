@@ -1,10 +1,13 @@
 apply plugin: 'com.android.application'
-
-
 android {
+    signingConfigs {
+        config {
+            keyAlias 'com.thisisnotajoke'
+            storeFile file('/Users/kurt/BTSync/android-keystore')
+        }
+    }
     compileSdkVersion 20
-    buildToolsVersion "20.0.0"
-
+    buildToolsVersion '20.0.0'
     defaultConfig {
         applicationId "com.thisisnotajoke.lockitron.wear"
         minSdkVersion 20
@@ -19,9 +22,16 @@ android {
         }
     }
 }
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.support:wearable:+'
-    compile 'com.google.android.gms:play-services-wearable:+'
+    //compile 'com.google.android.support:wearable:+'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+repositories {
+    mavenCentral()
 }

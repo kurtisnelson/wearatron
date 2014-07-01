@@ -5,20 +5,21 @@ repositories {
 }
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
-
+    signingConfigs {
+        config {
+            storeFile file('/Users/kurt/BTSync/android-keystore')
+        }
+    }
+    compileSdkVersion 19
+    buildToolsVersion '20.0.0'
     defaultConfig {
         applicationId "com.thisisnotajoke.lockitron.mobile"
-        minSdkVersion 19
-        targetSdkVersion 20
+        minSdkVersion 15
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
     }
     buildTypes {
         release {
@@ -29,10 +30,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:20.+'
-    compile 'com.google.android.gms:play-services-wearable:+'
-    compile 'com.wu-man:android-oauth-client:0.0.3'
-    compile project(":lib")
-    wearApp project(':wear')
+    compile project(':lib')
+    //compile 'com.android.support:support-v13:19.+'
+    //compile 'com.google.android.gms:play-services:+'
+    //wearApp project(':wear')
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 }
