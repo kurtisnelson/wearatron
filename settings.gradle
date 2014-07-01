@@ -1,1 +1,1 @@
-include ':volley', ':lib', 'Glass'
+include ':volley', ':lib', ':Glass', ':wear', ':mobile'
