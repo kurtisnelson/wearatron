@@ -80,6 +80,7 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
         pm.setLock(uuid);
         pm.requestBackup();
         stopService(new Intent(this, WearDispatchService.class));
+        startService(new Intent(this, WearDispatchService.class));
 
         Toast.makeText(this, R.string.lock_selected, Toast.LENGTH_LONG).show();
     }

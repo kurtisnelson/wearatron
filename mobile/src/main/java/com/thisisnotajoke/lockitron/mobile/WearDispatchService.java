@@ -1,5 +1,6 @@
 package com.thisisnotajoke.lockitron.mobile;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.util.Log;
@@ -33,9 +34,11 @@ public class WearDispatchService extends WearableListenerService implements Comm
     @Override
     public void onCreate() {
         super.onCreate();
+
         PreferenceManager pm = new PreferenceManager(this);
         mToken = pm.getToken().getToken();
         mUUID = pm.getLock();
+        Log.d(TAG, "onCreate " + mToken + " " + mUUID);
         mApi = new Lockitron(this).user(mToken);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addOnConnectionFailedListener(this)
@@ -44,8 +47,23 @@ public class WearDispatchService extends WearableListenerService implements Comm
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onSTartCommand");
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
+        Log.d(TAG, "Message: " + messageEvent.getPath());
         mLastNode = messageEvent.getSourceNodeId();
         if(messageEvent.getPath().equals(LOCK_PATH)){
             execute(CommandTask.LOCK);
@@ -56,6 +74,7 @@ public class WearDispatchService extends WearableListenerService implements Comm
 
     @Override
     public void success(String lock) {
+        mGoogleApiClient.blockingConnect();
         MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, mLastNode, SUCCESS_PATH, null).await();
         if (!result.getStatus().isSuccess()) {
             Log.e(TAG, "ERROR: failed to send success message: " + result.getStatus());
@@ -65,6 +84,7 @@ public class WearDispatchService extends WearableListenerService implements Comm
     @Override
     public void error(String lock, VolleyError error) {
         Log.e(TAG, "Volley Error", error);
+        mGoogleApiClient.blockingConnect();
         MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, mLastNode, ERROR_PATH, null).await();
         if (!result.getStatus().isSuccess()) {
             Log.e(TAG, "ERROR: failed to send error message: " + result.getStatus());

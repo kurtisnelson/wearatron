@@ -42,6 +42,18 @@ public class LockitronActivity extends InsetActivity implements CircleFragment.C
         mDoorPager.setAdapter(new DoorGridViewPagerAdapter(getFragmentManager()));
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
     class DoorGridViewPagerAdapter extends FragmentGridPagerAdapter {
 
         public DoorGridViewPagerAdapter(FragmentManager fm) {
@@ -126,13 +138,14 @@ class MessageTask extends AsyncTask<Boolean, Void, Boolean> {
     protected Boolean doInBackground(Boolean... command) {
         Log.d(TAG, "Starting task");
         String msg;
+        String node = getNode().getId();
         if(command[0]){
             msg = LOCK_PATH;
         }else {
             msg = UNLOCK_PATH;
         }
-        Log.d(TAG, "Firing message");
-        MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, getNode().getId(), msg, null).await();
+        Log.d(TAG, "Firing message to " + node);
+        MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node, msg, null).await();
         if (result.getStatus().isSuccess()) {
             Log.d(TAG, "Sent message");
             return true;
@@ -159,6 +172,7 @@ class MessageTask extends AsyncTask<Boolean, Void, Boolean> {
     private Node getNode() {
         NodeApi.GetConnectedNodesResult nodes =
                 Wearable.NodeApi.getConnectedNodes(mClient).await();
+        Log.d(TAG, "Nodes: " + nodes.getNodes().size());
         return nodes.getNodes().get(0);
     }
 }
