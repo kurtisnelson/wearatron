@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.CircledImageView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,11 @@ public class CircleFragment extends android.app.Fragment {
 
     private static final String LOCK_ARG = "LockArg";
     private boolean mLock;
+    private Callback mCallback;
+
+    public interface Callback {
+        public void onClick(boolean lock);
+    }
 
     public static CircleFragment newInstance(boolean lock) {
         CircleFragment f = new CircleFragment();
@@ -47,12 +51,13 @@ public class CircleFragment extends android.app.Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Lockitron", "clicked");
-                Intent intent = new Intent(getActivity(), ConfirmationActivity.class);
-                intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION);
-                startActivity(intent);
+                mCallback.onClick(mLock);
             }
         });
         return layout;
+    }
+
+    public void setCallback(Callback callback) {
+        this.mCallback = callback;
     }
 }
