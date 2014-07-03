@@ -1,4 +1,4 @@
-package com.thisisnotajoke.lockitron.glass;
+package com.thisisnotajoke.lockitron;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,9 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.thisisnotajoke.lockitron.Lock;
-import com.thisisnotajoke.lockitron.Lockitron;
-import com.thisisnotajoke.lockitron.User;
+import com.kelsonprime.lockitron.R;
 
 import java.util.ArrayList;
 

@@ -1,22 +1,17 @@
-package com.thisisnotajoke.lockitron.glass;
+package com.thisisnotajoke.lockitron;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.glass.media.Sounds;
-import com.thisisnotajoke.lockitron.Lockitron;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,12 +27,18 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
     private final Context context;
     private final String lockUUID;
     private final String token;
+    private final Callback mCallback;
 
-    public CommandTask(Context context, String token, String lockUUID){
+    public interface Callback {
+        public void success(String lock);
+        public void error(String lock, VolleyError error);
+    }
+    public CommandTask(Context context, String token, String lockUUID, Callback callback){
         super();
         this.context = context;
         this.token = token;
         this.lockUUID = lockUUID;
+        mCallback = callback;
         queue = Volley.newRequestQueue(context);
         audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
@@ -52,11 +53,7 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
             public void onResponse(JSONObject response) {
                 Log.d(TAG, command + " success");
 
-                if(Build.PRODUCT.equals("glass_1")) {
-                    audio.playSoundEffect(Sounds.SUCCESS);
-                }else{
-                    Toast.makeText(context, R.string.success, Toast.LENGTH_SHORT).show();
-                }
+                mCallback.success(lockUUID);
 
             }
         }, new Response.ErrorListener() {
@@ -64,20 +61,7 @@ public class CommandTask extends AsyncTask<String, Void, Void> {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Error: " + error.getMessage());
                 Log.e(TAG, "Error: " + error.getStackTrace().toString());
-                NetworkResponse response = error.networkResponse;
-
-                if (response != null) {
-                    Log.e(TAG, "Network Response: " + response.toString());
-                    switch (response.statusCode){
-                        case 401:
-                            Toast.makeText(context, R.string.authentication_error, Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(Build.PRODUCT.equals("glass_1")) {
-                    audio.playSoundEffect(Sounds.ERROR);
-                }else{
-                    Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
-                }
+                mCallback.error(lockUUID, error);
             }
         });
         jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

@@ -7,8 +7,11 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.android.volley.VolleyError;
+import com.thisisnotajoke.lockitron.CommandTask;
 
-public class CommandService extends Service{
+
+public class CommandService extends Service implements CommandTask.Callback {
     public static final String PREFS_NAME = "server";
     public static final String PREFS_UUID = "uuid";
     public static final String PREFS_TOKEN = "token";
@@ -31,7 +34,7 @@ public class CommandService extends Service{
 
     protected void run(String c){
         if(hasCredentials()){
-            new CommandTask(this.getApplicationContext(), token, lockUUID).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, c);
+            new CommandTask(this.getApplicationContext(), token, lockUUID, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, c);
             Log.d(TAG, "Executed task");
         }
         stopSelf();
@@ -56,5 +59,15 @@ public class CommandService extends Service{
         editor.putString("lock", lockUUID);
         editor.putString("token", token);
         editor.commit();
+    }
+
+    @Override
+    public void success(String lock) {
+
+    }
+
+    @Override
+    public void error(String lock, VolleyError error) {
+
     }
 }
