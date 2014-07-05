@@ -44,16 +44,17 @@ public class Auth {
     public void driveWebview(WebView webView) {
         String authUrl = mService.getAuthorizationUrl(null);
         webView.loadUrl(authUrl);
-        Log.w(TAG, authUrl);
+        Log.d(TAG, authUrl);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                //Log.d(TAG, "** in shouldOverrideUrlLoading(), url is: " + url);
+                Log.d(TAG, "** in shouldOverrideUrlLoading(), url is: " + url);
                 if ( url.startsWith(Auth.REDIRECT_URI) ) {
+                    Log.d(TAG, "Overridng loading for " + url);
                     // extract OAuth2 access_token appended in url
                     if ( url.indexOf("code=") != -1 ) {
-                        String[] sArray = url.split("code=");
+                        String[] sArray = url.split("code=s");
                         verify(sArray[1]);
                     }
 
