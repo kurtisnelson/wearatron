@@ -1,4 +1,4 @@
-package com.thisisnotajoke.lockitron.mobile;
+package com.thisisnotajoke.wearatron;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ public class AuthActivity extends FragmentActivity implements Auth.TokenCallback
 
         Token token = new PreferenceManager(this).getToken();
         if(token != null){
-            success(token);
+            success();
         }else {
             Auth auth = new Auth(this);
             findViewById(R.id.activitY_auth_progress).setVisibility(View.GONE);
@@ -32,10 +32,10 @@ public class AuthActivity extends FragmentActivity implements Auth.TokenCallback
     @Override
     public void token(Token token) {
         new PreferenceManager(this).setToken(token);
-        success(token);
+        success();
     }
 
-    public void success(Token token) {
+    public void success() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

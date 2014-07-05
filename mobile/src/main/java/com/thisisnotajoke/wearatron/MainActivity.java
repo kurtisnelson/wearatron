@@ -1,4 +1,4 @@
-package com.thisisnotajoke.lockitron.mobile;
+package com.thisisnotajoke.wearatron;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,6 +24,7 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private static final String DIALOG_ERROR = "dialog_error";
+    private static final String TAG = "MainActivity";
 
     private String mToken;
 
@@ -42,7 +44,12 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
 
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
-        wearable();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Wearable.API)
+                .build();
     }
 
     @Override
@@ -55,7 +62,9 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
 
     @Override
     protected void onStop() {
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
         super.onStop();
     }
 
@@ -80,17 +89,8 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
         pm.setLock(uuid);
         pm.requestBackup();
         stopService(new Intent(this, WearDispatchService.class));
-        startService(new Intent(this, WearDispatchService.class));
 
         Toast.makeText(this, R.string.lock_selected, Toast.LENGTH_LONG).show();
-    }
-
-    private void wearable() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
     }
 
     @Override
@@ -129,7 +129,7 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
 
     @Override
     public void onConnected(Bundle bundle) {
-
+        Log.d(TAG, "GAC connected");
     }
 
     @Override

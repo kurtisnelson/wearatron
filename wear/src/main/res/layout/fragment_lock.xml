@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.wearable.view.BoxInsetLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        app:layout_box="all">
-
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="vertical">
         <android.support.wearable.view.CircledImageView
             android:id="@+id/fragment_lock_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:circle_border_color="@color/black"
+            android:layout_gravity="center_horizontal|center_vertical"
             app:circle_color="@color/white"
-            app:circle_radius="65dp" />
-    </android.support.wearable.view.BoxInsetLayout>
+            app:circle_radius="58dp"
+            app:circle_radius_pressed="60dp" />
 
-    <TextView
-        android:id="@+id/fragment_lock_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="5dp"
-        tools:text="Unlock" />
-</FrameLayout>
+        <TextView
+            android:id="@+id/fragment_lock_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:fontFamily="sans-serif-thin"
+            tools:text="Unlock" />
+        </LinearLayout>
+</android.support.wearable.view.BoxInsetLayout>
+

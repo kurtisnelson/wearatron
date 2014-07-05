@@ -1,9 +1,7 @@
-package com.thisisnotajoke.lockitron.wear;
+package com.thisisnotajoke.wearatron;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.CircledImageView;
 import android.view.LayoutInflater;
 import android.view.View;

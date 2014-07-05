@@ -6,7 +6,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.thisisnotajoke.lockitron.mobile.AuthActivity$PlaceholderFragment">
+    tools:context="com.thisisnotajoke.wearatron.AuthActivity$PlaceholderFragment">
 
     <TextView
         android:text="hi mom"

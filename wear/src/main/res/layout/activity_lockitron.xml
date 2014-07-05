@@ -3,7 +3,4 @@
 <android.support.wearable.view.GridViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_lockitron_pager"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black">
-
-</android.support.wearable.view.GridViewPager>
+    android:layout_height="match_parent" />

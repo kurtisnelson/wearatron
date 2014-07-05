@@ -1,101 +1,26 @@
-package com.thisisnotajoke.lockitron.wear;
+package com.thisisnotajoke.wearatron;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.wearable.activity.ConfirmationActivity;
-import android.support.wearable.activity.InsetActivity;
-import android.support.wearable.view.FragmentGridPagerAdapter;
-import android.support.wearable.view.GridViewPager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
 
-public class LockitronActivity extends InsetActivity implements CircleFragment.Callback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
-    private static final String TAG = "LockitronActivity";
-    private GridViewPager mDoorPager;
-
-    @Override
-    public void onReadyForContent() {
-        setContentView(R.layout.activity_lockitron);
-        mDoorPager = (GridViewPager) findViewById(R.id.activity_lockitron_pager);
-        mDoorPager.setBackgroundColor(getResources().getColor(R.color.blue));
-        mDoorPager.setAdapter(new DoorGridViewPagerAdapter(getFragmentManager()));
-    }
-
-    @Override
-    public void onClick(boolean lock) {
-        new MessageTask(this).execute(lock);
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, "Connection failed: " + connectionResult);
-        Intent intent = new Intent(LockitronActivity.this, ConfirmationActivity.class);
-        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.FAILURE_ANIMATION);
-        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, "Please make sure the companion app is setup");
-        startActivity(intent);
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d(TAG, "Connected to play services");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(TAG, "Connection suspended");
-    }
-
-    class DoorGridViewPagerAdapter extends FragmentGridPagerAdapter {
-
-        public DoorGridViewPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getRowCount() {
-            return 1;
-        }
-
-        @Override
-        public int getColumnCount(int i) {
-            return 2;
-        }
-
-        @Override
-        public Fragment getFragment(int row, int column) {
-            CircleFragment f = CircleFragment.newInstance(column % 2 == 0);
-            f.setCallback(LockitronActivity.this);
-            return f;
-        }
-
-        @Override
-        protected long getFragmentId(int row, int column) {
-            return row * column;
-        }
-    }
-}
-
-
-class MessageTask extends AsyncTask<Boolean, Void, Boolean> implements GoogleApiClient.OnConnectionFailedListener {
+public class LockMessageTask extends AsyncTask<Boolean, Void, Boolean> implements GoogleApiClient.OnConnectionFailedListener {
     private static final String ACTION_PATH = "/action";
     private static final String TAG = "MessageTask";
     private GoogleApiClient mClient;
     private final Context mContext;
 
-    public MessageTask(Context c){
+    public LockMessageTask(Context c){
         mContext = c;
     }
 
@@ -155,4 +80,3 @@ class MessageTask extends AsyncTask<Boolean, Void, Boolean> implements GoogleApi
         cancel(true);
     }
 }
-
