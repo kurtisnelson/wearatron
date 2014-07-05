@@ -15,24 +15,16 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.List;
+
 public class LockitronActivity extends InsetActivity implements CircleFragment.Callback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
     private static final String TAG = "LockitronActivity";
     private GridViewPager mDoorPager;
-    private GoogleApiClient mGoogleApiClient;
-
-    @Override
-    protected void onCreate(Bundle state) {
-        super.onCreate(state);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
-    }
 
     @Override
     public void onReadyForContent() {
@@ -43,15 +35,27 @@ public class LockitronActivity extends InsetActivity implements CircleFragment.C
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
+    public void onClick(boolean lock) {
+        new MessageTask(this).execute(lock);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        mGoogleApiClient.disconnect();
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e(TAG, "Connection failed: " + connectionResult);
+        Intent intent = new Intent(LockitronActivity.this, ConfirmationActivity.class);
+        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.FAILURE_ANIMATION);
+        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, "Please make sure the companion app is setup");
+        startActivity(intent);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d(TAG, "Connected to play services");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(TAG, "Connection suspended");
     }
 
     class DoorGridViewPagerAdapter extends FragmentGridPagerAdapter {
@@ -82,77 +86,49 @@ public class LockitronActivity extends InsetActivity implements CircleFragment.C
             return row * column;
         }
     }
-
-    @Override
-    public void onClick(boolean lock) {
-        new MessageTask(this, mGoogleApiClient).execute(lock);
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, "Connection failed: " + connectionResult);
-        Intent intent = new Intent(LockitronActivity.this, ConfirmationActivity.class);
-        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.FAILURE_ANIMATION);
-        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, "Please make sure the companion app is setup");
-        startActivity(intent);
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d(TAG, "Connected");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(TAG, "Connection suspended");
-    }
 }
 
 
-class MessageTask extends AsyncTask<Boolean, Void, Boolean> {
-    private static final String LOCK_PATH = "/action/lock";
-    private static final String UNLOCK_PATH = "/action/unlock";
+class MessageTask extends AsyncTask<Boolean, Void, Boolean> implements GoogleApiClient.OnConnectionFailedListener {
+    private static final String ACTION_PATH = "/action";
     private static final String TAG = "MessageTask";
-    private final GoogleApiClient mClient;
+    private GoogleApiClient mClient;
     private final Context mContext;
 
-    public MessageTask(Context c, GoogleApiClient client){
+    public MessageTask(Context c){
         mContext = c;
-        mClient = client;
-    }
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        Log.d(TAG, "preexecute");
-        if(mClient == null || !mClient.isConnected()){
-            Log.w(TAG, "Could not start task");
-            Intent intent = new Intent(mContext, ConfirmationActivity.class);
-            intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.FAILURE_ANIMATION);
-            intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, "Please make sure the companion app is setup and running");
-            mContext.startActivity(intent);
-            cancel(true);
-        }
     }
 
     @Override
     protected Boolean doInBackground(Boolean... command) {
+        Log.d(TAG, "connecting...");
+        mClient = new GoogleApiClient.Builder(mContext)
+                .addOnConnectionFailedListener(this)
+                .addApi(Wearable.API)
+                .build();
+        mClient.blockingConnect();
         Log.d(TAG, "Starting task");
-        String msg;
-        String node = getNode().getId();
-        if(command[0]){
-            msg = LOCK_PATH;
-        }else {
-            msg = UNLOCK_PATH;
+        List<Node> nodes = Wearable.NodeApi.getConnectedNodes(mClient).await().getNodes();
+        Log.d(TAG, "got nodes");
+        for(Node node : nodes) {
+            byte[] payload;
+            if (command[0]) {
+                payload = new byte[]{0x1};
+            } else {
+                payload = new byte[]{0x0};
+            }
+
+            Log.d(TAG, "Firing message to " + node);
+            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), ACTION_PATH, payload).await();
+            if (!result.getStatus().isSuccess()) {
+                Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
+                mClient.disconnect();
+                return false;
+            }
+            Log.d(TAG, "Sent message " + result.getStatus());
         }
-        Log.d(TAG, "Firing message to " + node);
-        MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node, msg, null).await();
-        if (result.getStatus().isSuccess()) {
-            Log.d(TAG, "Sent message");
-            return true;
-        } else {
-            Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
-            return false;
-        }
+        mClient.disconnect();
+        return true;
     }
 
     @Override
@@ -169,11 +145,14 @@ class MessageTask extends AsyncTask<Boolean, Void, Boolean> {
         mContext.startActivity(intent);
     }
 
-    private Node getNode() {
-        NodeApi.GetConnectedNodesResult nodes =
-                Wearable.NodeApi.getConnectedNodes(mClient).await();
-        Log.d(TAG, "Nodes: " + nodes.getNodes().size());
-        return nodes.getNodes().get(0);
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.w(TAG, "Could not connect");
+        Intent intent = new Intent(mContext, ConfirmationActivity.class);
+        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.FAILURE_ANIMATION);
+        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, connectionResult.toString());
+        mContext.startActivity(intent);
+        cancel(true);
     }
 }
 
