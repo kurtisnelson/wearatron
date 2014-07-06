@@ -1,6 +1,7 @@
 package com.thisisnotajoke.lockitron;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.webkit.WebView;
@@ -41,23 +42,21 @@ public class Auth {
         driveWebview(webView);
     }
 
-    public void driveWebview(WebView webView) {
+    public void driveWebview(final WebView webView) {
         String authUrl = mService.getAuthorizationUrl(null);
-        webView.loadUrl(authUrl);
         Log.d(TAG, authUrl);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl(authUrl);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "** in shouldOverrideUrlLoading(), url is: " + url);
-                if ( url.startsWith(Auth.REDIRECT_URI) ) {
-                    Log.d(TAG, "Overridng loading for " + url);
+                if( url.startsWith(Auth.REDIRECT_URI) ) {
+                    Log.d(TAG, "Overridng loading");
                     // extract OAuth2 access_token appended in url
-                    if ( url.indexOf("code=") != -1 ) {
-                        String[] sArray = url.split("code=s");
-                        verify(sArray[1]);
-                    }
-
+                    String code = Uri.parse(url).getQueryParameter("code");
+                    verify(code);
                     // don't go to redirectUri
                     return true;
                 }
