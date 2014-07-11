@@ -30,11 +30,14 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
 
     private GoogleApiClient mGoogleApiClient;
     private boolean mResolvingError;
+    private String mLock;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mToken = new PreferenceManager(this).getToken().getToken();
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+        mToken = preferenceManager.getToken().getToken();
+        mLock = preferenceManager.getLock();
         setContentView(getLayoutResId());
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = createFragment();
@@ -75,7 +78,7 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
     }
 
     private Fragment createFragment() {
-        return new LockListFragment().newInstance(mToken);
+        return new LockListFragment().newInstance(mToken, mLock);
     }
 
     private int getLayoutResId() {
@@ -85,12 +88,13 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
     @Override
     public void onLockSelected(Lock lock) {
         String uuid = lock.getUUID();
+        mLock = uuid;
         PreferenceManager pm = new PreferenceManager(this);
         pm.setLock(uuid);
         pm.requestBackup();
         stopService(new Intent(this, WearDispatchService.class));
 
-        Toast.makeText(this, R.string.lock_selected, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.lock_selected, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,15 +18,18 @@ import java.util.ArrayList;
 
 public class LockListFragment extends ListFragment {
     private static final String EXTRA_TOKEN = "TOKEN";
+    private static final String EXTRA_LOCK = "LOCK.UUID";
     private static final String TAG = "LockListFragment";
-    private String token;
     private ArrayList<Lock> mLocks;
     private Callbacks mCallbacks;
+    private ListView mListView;
+    private String mSelectedUuid;
+    private String mToken;
 
-    public static LockListFragment newInstance(String token) {
+    public static LockListFragment newInstance(String token, String selectedLock) {
         Bundle args = new Bundle();
         args.putString(EXTRA_TOKEN, token);
-
+        args.putString(EXTRA_LOCK, selectedLock);
         LockListFragment fragment = new LockListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -33,6 +37,19 @@ public class LockListFragment extends ListFragment {
 
     public interface Callbacks {
         void onLockSelected(Lock lock);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mToken = getArguments().getString(EXTRA_TOKEN);
+        mSelectedUuid = getArguments().getString(EXTRA_LOCK);
+        User lockitronUser = new Lockitron(getActivity().getApplicationContext()).user(mToken);
+        Log.d(TAG, "My token is " + mToken);
+        mLocks = lockitronUser.getLocks();
+        LockAdapter adapter = new LockAdapter(mLocks);
+        lockitronUser.setLocksAdapter(adapter);
+        setListAdapter(adapter);
     }
 
     @Override
@@ -52,33 +69,23 @@ public class LockListFragment extends ListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        token = getArguments().getString(EXTRA_TOKEN);
-        User lockitronUser = new Lockitron(getActivity().getApplicationContext()).user(token);
-        Log.d(TAG, "My token is " + token);
-        mLocks = lockitronUser.getLocks();
-        LockAdapter adapter = new LockAdapter(mLocks);
-        lockitronUser.setLocksAdapter(adapter);
-        setListAdapter(adapter);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
+        View v = inflater.inflate(R.layout.fragment_lock_list, container, false);
+        mListView = (ListView) v.findViewById(android.R.id.list);
         return v;
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Lock lock = ((LockAdapter) getListAdapter()).getItem(position);
+        mSelectedUuid = lock.getUUID();
+        mListView.setItemChecked(position, true);
         mCallbacks.onLockSelected(lock);
     }
 
     private class LockAdapter extends ArrayAdapter<Lock> {
         public LockAdapter(ArrayList<Lock> locks){
-            super(getActivity(), android.R.layout.simple_list_item_1, locks);
+            super(getActivity(), R.layout.list_item_lock, locks);
         }
 
         public View getView(int position, View convertView, ViewGroup parent){
@@ -91,6 +98,11 @@ public class LockListFragment extends ListFragment {
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.lock_list_item_nameTextView);
             titleTextView.setText(l.getName());
+
+            if(l.getUUID().equals(mSelectedUuid)){
+                mListView.setItemChecked(position, true);
+            }
+
             return convertView;
         }
     }
