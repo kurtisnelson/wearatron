@@ -17,7 +17,7 @@ public class ConfigurationActivity extends FragmentActivity implements LockListF
     private String token, uuid;
 
     protected Fragment createFragment() {
-        return LockListFragment.newInstance(token);
+        return LockListFragment.newInstance(token, uuid);
     }
 
     protected int getLayoutResId() {
