@@ -92,7 +92,8 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
         PreferenceManager pm = new PreferenceManager(this);
         pm.setLock(uuid);
         pm.requestBackup();
-        stopService(new Intent(this, WearDispatchService.class));
+        stopService(new Intent(this, MobileDispatchService.class));
+
 
         Toast.makeText(this, R.string.lock_selected, Toast.LENGTH_SHORT).show();
     }

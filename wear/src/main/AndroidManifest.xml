@@ -12,7 +12,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
+        <service android:name=".WearDispatchService">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>
+        </service>
+
         <activity android:name="android.support.wearable.activity.ConfirmationActivity">
         </activity>
     </application>

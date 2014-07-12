@@ -1,12 +1,16 @@
 package com.thisisnotajoke.lockitron;
 
-import android.app.backup.BackupAgentHelper;
 import android.app.backup.BackupManager;
-import android.app.backup.SharedPreferencesBackupHelper;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
+
+import com.google.android.gms.location.Geofence;
 
 import org.scribe.model.Token;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PreferenceManager {
     private static final String TOKEN_SECRET = "Secret";
@@ -14,6 +18,8 @@ public class PreferenceManager {
     private static final String LOCK_UUID = "Lock.UUID";
     protected static final String BACKUP_KEY = "LockitronBackups";
     protected static final String PREF_NAME = "Lockitron";
+    private static final String LOCATION_LONG_KEY = "LocationLong";
+    private static final String LOCATION_LAT_KEY = "LocationLat";
     private final SharedPreferences prefs;
     private final Context mContext;
 
@@ -32,14 +38,14 @@ public class PreferenceManager {
                 .edit()
                 .putString(TOKEN_SECRET, token.getSecret())
                 .putString(TOKEN_TOKEN, token.getToken())
-                .commit();
+                .apply();
     }
 
     public Token getToken() {
         String secret = prefs.getString(TOKEN_SECRET, null);
         String token = prefs.getString(TOKEN_TOKEN, null);
 
-        if(secret == null && token == null){
+        if (secret == null && token == null) {
             return null;
         }
         return new Token(token, secret);
@@ -49,11 +55,42 @@ public class PreferenceManager {
         prefs
                 .edit()
                 .putString(LOCK_UUID, uuid)
-                .commit();
+                .apply();
     }
 
     public String getLock() {
         return prefs.getString(LOCK_UUID, null);
+    }
+
+    public double getLocationLatitude() {
+        String latStr = prefs.getString(LOCATION_LAT_KEY, null);
+        return Double.valueOf(latStr);
+    }
+
+    public double getLocationLongitude() {
+        String longStr = prefs.getString(LOCATION_LONG_KEY, null);
+        return Double.valueOf(longStr);
+    }
+
+    public void setLocation(Location location) {
+        prefs
+                .edit()
+                .putString(LOCATION_LONG_KEY, String.valueOf(location.getLongitude()))
+                .putString(LOCATION_LAT_KEY, String.valueOf(location.getLatitude()))
+                .apply();
+    }
+
+    public List<Geofence> getGeofences() {
+        Geofence geofence = new Geofence.Builder()
+                .setRequestId(GeofenceManager.HINT_REQUEST_ID)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+                .setCircularRegion(
+                        getLocationLatitude(), getLocationLongitude(), 500f)
+                .setExpirationDuration(86400000)
+                .build();
+        ArrayList<Geofence> list = new ArrayList<Geofence>();
+        list.add(geofence);
+        return list;
     }
 }
 
