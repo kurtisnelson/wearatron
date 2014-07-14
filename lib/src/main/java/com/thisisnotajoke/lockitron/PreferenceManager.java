@@ -83,7 +83,7 @@ public class PreferenceManager {
     public List<Geofence> getGeofences() {
         Geofence geofence = new Geofence.Builder()
                 .setRequestId(GeofenceManager.HINT_REQUEST_ID)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .setCircularRegion(
                         getLocationLatitude(), getLocationLongitude(), 500f)
                 .setExpirationDuration(86400000)

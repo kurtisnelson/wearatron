@@ -35,19 +35,12 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
                             Integer.toString(errorCode)
             );
         } else {
-            // Get the type of transition (entry or exit)
-            int transitionType =
-                    LocationClient.getGeofenceTransition(intent);
-            // Test that a valid transition was reported
-            if (
-                    (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER)
-                            ||
-                            (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT)
-                    ) {
+            int transitionType = LocationClient.getGeofenceTransition(intent);
+            if(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER || transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
                 List<Geofence> triggerList = LocationClient.getTriggeringGeofences(intent);
                 for (Geofence g : triggerList) {
                     if (g.getRequestId().equals(GeofenceManager.HINT_REQUEST_ID)) {
-                        pushHint();
+                        pushHint(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER ? true : false);
                     }
                 }
             } else {
@@ -59,7 +52,7 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
         }
     }
 
-    private boolean pushHint() {
+    private boolean pushHint(boolean add) {
         GoogleApiClient mClient = new GoogleApiClient.Builder(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
@@ -68,9 +61,16 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
         Log.d(TAG, "Starting task");
         List<Node> nodes = Wearable.NodeApi.getConnectedNodes(mClient).await().getNodes();
         Log.d(TAG, "got nodes");
+
+        byte[] payload;
+        if (add) {
+            payload = new byte[]{0x1};
+        } else {
+            payload = new byte[]{0x0};
+        }
         for(Node node : nodes) {
             Log.d(TAG, "Firing message to " + node);
-            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), HINT_PATH, null).await();
+            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), HINT_PATH, payload).await();
             if (!result.getStatus().isSuccess()) {
                 Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
                 mClient.disconnect();

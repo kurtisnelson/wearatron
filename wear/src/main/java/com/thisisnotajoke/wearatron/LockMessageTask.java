@@ -60,7 +60,7 @@ public class LockMessageTask extends AsyncTask<Boolean, Void, Boolean> implement
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
         Intent intent = new Intent(mContext, ConfirmationActivity.class);
-
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         if(success){
             intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION);
         }else{

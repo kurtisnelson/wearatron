@@ -3,12 +3,14 @@ package com.thisisnotajoke.wearatron;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
+import android.os.Handler;
 import android.support.wearable.activity.InsetActivity;
 import android.support.wearable.view.FragmentGridPagerAdapter;
 import android.support.wearable.view.GridViewPager;
 
 public class LockitronActivity extends InsetActivity implements CircleFragment.Callback {
     private static final String TAG = "LockitronActivity";
+    public static final String DO_EXTRA = "DoExtra";
     private GridViewPager mDoorPager;
 
     @Override
@@ -17,6 +19,18 @@ public class LockitronActivity extends InsetActivity implements CircleFragment.C
         mDoorPager = (GridViewPager) findViewById(R.id.activity_lockitron_pager);
         mDoorPager.setBackgroundColor(getResources().getColor(R.color.black));
         mDoorPager.setAdapter(new DoorGridViewPagerAdapter(getFragmentManager()));
+        if (getIntent().hasExtra(DO_EXTRA)) {
+            Runnable dirtyHack = new Runnable() {
+                @Override
+                public void run() {
+                    boolean task = getIntent().getBooleanExtra(DO_EXTRA, false);
+                    mDoorPager.setCurrentItem(0, task ? 0 : 1);
+                    onClick(task);
+                }
+            };
+            Handler handler = new Handler();
+            handler.postDelayed(dirtyHack, 100);
+        }
     }
 
     @Override
