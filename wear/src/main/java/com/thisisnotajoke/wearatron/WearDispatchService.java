@@ -21,13 +21,8 @@ public class WearDispatchService extends WearableListenerService {
         if(messageEvent.getPath().equals(HINT_PATH)){
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             if(messageEvent.getData()[0] == 0x1) {
-                Intent unlockIntent = new Intent(this, LockitronActivity.class);
-                unlockIntent.putExtra(LockitronActivity.DO_EXTRA, false);
-                PendingIntent unlockPendingIntent = PendingIntent.getActivity(this, 1, unlockIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-                Intent lockIntent = new Intent(this, LockitronActivity.class);
-                lockIntent.putExtra(LockitronActivity.DO_EXTRA, true);
-                PendingIntent lockPendingIntent = PendingIntent.getActivity(this, 2, lockIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent unlockPendingIntent = PendingIntent.getService(this, 1, LockitronService.startActionUnlock(this), PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent lockPendingIntent = PendingIntent.getService(this, 2, LockitronService.startActionLock(this), PendingIntent.FLAG_CANCEL_CURRENT);
 
                 NotificationCompat.WearableExtender wearableExtender =
                         new NotificationCompat.WearableExtender();
@@ -35,8 +30,8 @@ public class WearDispatchService extends WearableListenerService {
                 Notification notification = new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(getString(R.string.app_name))
-                        .addAction(R.drawable.action_unlock, getString(R.string.unlock), unlockPendingIntent)
-                        .addAction(R.drawable.action_lock, getString(R.string.lock), lockPendingIntent)
+                        .addAction(R.drawable.button_locked_normal, getString(R.string.unlock), unlockPendingIntent)
+                        .addAction(R.drawable.button_unlocked_normal, getString(R.string.lock), lockPendingIntent)
                         .setPriority(Notification.PRIORITY_LOW)
                         .extend(wearableExtender)
                         .build();

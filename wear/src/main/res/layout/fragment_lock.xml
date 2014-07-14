@@ -16,9 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            app:circle_color="@color/white"
+            app:circle_color="@color/blue"
             app:circle_radius="58dp"
-            app:circle_radius_pressed="60dp" />
+            app:circle_radius_pressed="60dp"/>
 
         <TextView
             android:id="@+id/fragment_lock_text"
