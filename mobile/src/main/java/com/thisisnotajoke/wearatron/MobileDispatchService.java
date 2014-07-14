@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
@@ -26,7 +27,6 @@ public class MobileDispatchService extends WearableListenerService implements Co
 
     private String mUUID;
     private String mToken;
-    private GoogleApiClient mGoogleApiClient;
     private PreferenceManager mPreferenceManager;
     private LocationClient mLocationClient;
 
@@ -35,6 +35,10 @@ public class MobileDispatchService extends WearableListenerService implements Co
         super.onCreate();
 
         mPreferenceManager = new PreferenceManager(this);
+        if(mPreferenceManager.getToken() == null || mPreferenceManager.getLock() == null){
+            Toast.makeText(this, "Please open the phone app, login, and select a lock", Toast.LENGTH_SHORT).show();
+            stopSelf();
+        }
         mToken = mPreferenceManager.getToken().getToken();
         mUUID = mPreferenceManager.getLock();
         Log.d(TAG, "onCreate");
