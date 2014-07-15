@@ -12,7 +12,7 @@ android {
         applicationId "com.thisisnotajoke.wearatron"
         minSdkVersion 20
         targetSdkVersion 20
-        versionCode 3
+        versionCode 4
         versionName "2.0"
     }
     buildTypes {
