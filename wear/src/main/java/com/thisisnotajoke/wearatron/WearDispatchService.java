@@ -30,8 +30,8 @@ public class WearDispatchService extends WearableListenerService {
                 Notification notification = new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(getString(R.string.app_name))
-                        .addAction(R.drawable.button_locked_normal, getString(R.string.unlock), unlockPendingIntent)
-                        .addAction(R.drawable.button_unlocked_normal, getString(R.string.lock), lockPendingIntent)
+                        .addAction(R.drawable.button_unlocked_normal, getString(R.string.unlock), unlockPendingIntent)
+                        .addAction(R.drawable.button_locked_normal, getString(R.string.lock), lockPendingIntent)
                         .setPriority(Notification.PRIORITY_LOW)
                         .extend(wearableExtender)
                         .build();
