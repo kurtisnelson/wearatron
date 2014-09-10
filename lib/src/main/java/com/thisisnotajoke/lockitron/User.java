@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,14 +43,13 @@ public class User {
 
             @Override
             public void onResponse(JSONArray response) {
+                Gson gson = new Gson();
                 locks.clear();
                 for(int i = 0; i < response.length(); i++){
                     JSONObject obj = null;
                     try {
                         obj = response.getJSONObject(i).getJSONObject("lock");
-                        String id = obj.getString("id");
-                        String name = obj.optString("name", id);
-                        locks.add(new Lock(id, name));
+                        locks.add(gson.fromJson(obj.toString(), Lock.class));
                     } catch (JSONException e) {
                         Log.e(TAG, "JSONException: " + e.getMessage());
                     }

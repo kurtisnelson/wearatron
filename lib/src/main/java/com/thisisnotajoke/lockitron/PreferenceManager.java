@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 
 import com.google.android.gms.location.Geofence;
+import com.google.gson.Gson;
 
 import org.scribe.model.Token;
 
@@ -14,19 +15,23 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit.converter.GsonConverter;
+
 public class PreferenceManager {
     private static final String TOKEN_SECRET = "Secret";
     private static final String TOKEN_TOKEN = "Token";
-    private static final String LOCK_UUID = "Lock.UUID";
     protected static final String BACKUP_KEY = "LockitronBackups";
     protected static final String PREF_NAME = "Lockitron";
+    private static final String LOCK_KEY = "Lock";
     private static final String LOCATION_LONG_KEY = "LocationLong";
     private static final String LOCATION_LAT_KEY = "LocationLat";
     private static final String LOCATION_ENABLED_KEY = "LocationEnabled";
     private final SharedPreferences prefs;
     private final Context mContext;
+    private final Gson mGson;
 
-    public PreferenceManager(Context context){
+    public PreferenceManager(Context context, Gson gson){
+        mGson = gson;
         mContext = context;
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
@@ -54,15 +59,16 @@ public class PreferenceManager {
         return new Token(token, secret);
     }
 
-    public void setLock(String uuid){
+    public void setLock(Lock lock){
         prefs
                 .edit()
-                .putString(LOCK_UUID, uuid)
+                .putString(LOCK_KEY, mGson.toJson(lock))
                 .apply();
     }
 
-    public String getLock() {
-        return prefs.getString(LOCK_UUID, null);
+    public Lock getLock() {
+        String json = prefs.getString(LOCK_KEY, "");
+        return mGson.fromJson(json, Lock.class);
     }
 
     public void setLocationEnabled(boolean enabled){

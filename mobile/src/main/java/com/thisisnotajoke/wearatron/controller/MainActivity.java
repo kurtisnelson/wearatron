@@ -38,7 +38,7 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
 
     private GoogleApiClient mGoogleApiClient;
     private boolean mResolvingError;
-    private String mLock;
+    private Lock mLock;
 
     @Inject
     PreferenceManager mPreferenceManager;
@@ -91,7 +91,7 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     }
 
     private Fragment createFragment() {
-        return new LockListFragment().newInstance(mToken, mLock);
+        return LockListFragment.newInstance(mToken, mLock);
     }
 
     private int getLayoutResId() {
@@ -99,15 +99,14 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     }
 
     @Override
-    public void onLockSelected(Lock lock) {
-        String uuid = lock.getUUID();
-        mLock = uuid;
-        mPreferenceManager.setLock(uuid);
+    public void onLockSelected(final Lock lock) {
+        mLock = lock;
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, new Intent(this, ReceiveTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         new AsyncTask<PendingIntent, Void, Void>() {
             @Override
             protected Void doInBackground(PendingIntent... params) {
+                mPreferenceManager.setLock(lock);
                 mGeofenceManager.setFenceLocation();
                 mGeofenceManager.registerGeofences(params[0]);
                 mPreferenceManager.requestBackup();

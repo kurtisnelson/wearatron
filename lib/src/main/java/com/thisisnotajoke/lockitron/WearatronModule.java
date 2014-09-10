@@ -2,6 +2,8 @@ package com.thisisnotajoke.lockitron;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -12,7 +14,7 @@ import dagger.Provides;
 
 public final class WearatronModule {
     @Provides
-    public PreferenceManager providesPreferenceManager(Context c) {
-        return new PreferenceManager(c);
+    public PreferenceManager providesPreferenceManager(Context c, Gson gson) {
+        return new PreferenceManager(c, gson);
     }
 }

@@ -4,19 +4,16 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Binder;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.bignerdranch.android.support.util.InjectionUtils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.thisisnotajoke.lockitron.CommandTask;
 import com.thisisnotajoke.lockitron.GeofenceManager;
+import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.PreferenceManager;
 
 import javax.inject.Inject;
@@ -26,7 +23,7 @@ public class MobileDispatchService extends WearableListenerService implements Co
     private static final String ACTION_PATH = "/action";
     private static final String TAG = "WearDispatchService";
 
-    private String mUUID;
+    private Lock mLock;
     private String mToken;
     @Inject
     PreferenceManager mPreferenceManager;
@@ -43,7 +40,7 @@ public class MobileDispatchService extends WearableListenerService implements Co
             stopSelf();
         }
         mToken = mPreferenceManager.getToken().getToken();
-        mUUID = mPreferenceManager.getLock();
+        mLock = mPreferenceManager.getLock();
         Log.d(TAG, "onCreate");
     }
 
@@ -88,7 +85,7 @@ public class MobileDispatchService extends WearableListenerService implements Co
     private void execute(String command) {
         long token = Binder.clearCallingIdentity();
         try {
-            new CommandTask(this.getApplicationContext(), mToken, mUUID, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, command);
+            new CommandTask(this.getApplicationContext(), mToken, mLock.getUUID(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, command);
         } finally {
             Binder.restoreCallingIdentity(token);
         }

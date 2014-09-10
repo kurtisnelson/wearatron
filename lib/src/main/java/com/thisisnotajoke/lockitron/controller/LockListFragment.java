@@ -28,10 +28,11 @@ public class LockListFragment extends ListFragment {
     private String mSelectedUuid;
     private String mToken;
 
-    public static LockListFragment newInstance(String token, String selectedLock) {
+    public static LockListFragment newInstance(String token, Lock selectedLock) {
         Bundle args = new Bundle();
         args.putString(EXTRA_TOKEN, token);
-        args.putString(EXTRA_LOCK, selectedLock);
+        if(selectedLock != null)
+            args.putString(EXTRA_LOCK, selectedLock.getUUID());
         LockListFragment fragment = new LockListFragment();
         fragment.setArguments(args);
         return fragment;

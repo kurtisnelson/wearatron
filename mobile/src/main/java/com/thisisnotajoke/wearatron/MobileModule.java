@@ -2,6 +2,7 @@ package com.thisisnotajoke.wearatron;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.PreferenceManager;
 import com.thisisnotajoke.lockitron.WearatronModule;
@@ -41,6 +42,11 @@ public final class MobileModule {
     //@Provides
     MobileApplication provideApplication() {
         return mApplication;
+    }
+
+    @Provides
+    Gson provideGson() {
+        return new Gson();
     }
 
     @Provides
