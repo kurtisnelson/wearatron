@@ -4,20 +4,29 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thisisnotajoke.lockitron.Lock;
+import com.thisisnotajoke.lockitron.PreferenceManager;
 import com.thisisnotajoke.lockitron.controller.LockListFragment;
+import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 
-public class ConfigurationActivity extends FragmentActivity implements LockListFragment.Callbacks {
+import org.scribe.model.Token;
+
+import javax.inject.Inject;
+
+public class ConfigurationActivity extends WearatronActivity implements LockListFragment.Callbacks {
     private static final String TAG = "ConfigurationActivity";
-    private String token, uuid;
+    private Token mToken;
+    private Lock mLock;
+
+    @Inject
+    PreferenceManager mPreferenceManager;
 
     protected Fragment createFragment() {
-        return LockListFragment.newInstance(token, uuid);
+        return LockListFragment.newInstance(mToken.getToken(), mLock);
     }
 
     protected int getLayoutResId() {
@@ -25,18 +34,17 @@ public class ConfigurationActivity extends FragmentActivity implements LockListF
     }
 
     protected void setToken(String token) {
-        this.token = token;
+        this.mToken = new Token(token, token);
         savePreferences();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
-        SharedPreferences settings = getSharedPreferences(CommandService.PREFS_NAME, MODE_PRIVATE);
-        token = settings.getString(CommandService.PREFS_TOKEN, null);
-        uuid = settings.getString(CommandService.PREFS_UUID, null);
-        if(token == null || token.isEmpty())
+        mToken = mPreferenceManager.getToken();
+        mLock = mPreferenceManager.getLock();
+        if(mToken == null || mToken.isEmpty())
             scan();
     }
 
@@ -63,17 +71,19 @@ public class ConfigurationActivity extends FragmentActivity implements LockListF
     }
 
     private void savePreferences(){
-        SharedPreferences settings = getSharedPreferences(CommandService.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(CommandService.PREFS_TOKEN, token);
-        editor.putString(CommandService.PREFS_UUID, uuid);
-        editor.commit();
+        mPreferenceManager.setToken(mToken);
+        mPreferenceManager.setLock(mLock);
     }
 
     @Override
     public void onLockSelected(Lock lock) {
-        uuid = lock.getUUID();
+        mLock = lock;
         savePreferences();
         finish();
+    }
+
+    @Override
+    protected boolean usesInjection() {
+        return true;
     }
 }

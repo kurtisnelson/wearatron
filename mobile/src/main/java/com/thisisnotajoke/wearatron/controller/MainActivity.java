@@ -16,12 +16,14 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.LockListFragment;
 import com.thisisnotajoke.lockitron.PreferenceManager;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
+import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.wearatron.MobileDispatchService;
 import com.thisisnotajoke.wearatron.R;
 import com.thisisnotajoke.wearatron.ReceiveTransitionsIntentService;
@@ -41,7 +43,7 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     private Lock mLock;
 
     @Inject
-    PreferenceManager mPreferenceManager;
+    DataManager mDataManager;
 
     @Inject
     GeofenceManager mGeofenceManager;
@@ -49,8 +51,8 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mToken = mPreferenceManager.getToken().getToken();
-        mLock = mPreferenceManager.getLock();
+        mToken = mDataManager.getToken().getToken();
+        mLock = mDataManager.getLock();
         setContentView(getLayoutResId());
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = createFragment();
@@ -106,10 +108,10 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
         new AsyncTask<PendingIntent, Void, Void>() {
             @Override
             protected Void doInBackground(PendingIntent... params) {
-                mPreferenceManager.setLock(lock);
+                mDataManager.setLock(lock);
                 mGeofenceManager.setFenceLocation();
                 mGeofenceManager.registerGeofences(params[0]);
-                mPreferenceManager.requestBackup();
+
                 return null;
             }
         }.execute(pendingIntent);

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.PreferenceManager;
 import com.thisisnotajoke.lockitron.WearatronModule;
+import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.wearatron.controller.AuthActivity;
 import com.thisisnotajoke.wearatron.controller.MainActivity;
 
@@ -21,6 +22,8 @@ import dagger.Provides;
                 //activity
                 AuthActivity.class,
                 MainActivity.class,
+                //service
+                MobileDispatchService.class,
         },
         includes = {
                 WearatronModule.class
@@ -52,6 +55,11 @@ public final class MobileModule {
     @Provides
     Context provideContext() {
         return mContext;
+    }
+
+    @Provides
+    DataManager provideDataManager(Context context, PreferenceManager preferenceManager, Gson gson) {
+        return new DataManager(context, preferenceManager, gson);
     }
 
     @Provides
