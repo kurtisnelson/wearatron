@@ -16,6 +16,7 @@ android {
 
 dependencies {
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile 'com.squareup.dagger:dagger:1.2.+'
     compile 'org.scribe:scribe:1.+'
     compile 'com.android.support:support-v13:19.+'
     compile 'com.google.android.gms:play-services-wearable:+'
