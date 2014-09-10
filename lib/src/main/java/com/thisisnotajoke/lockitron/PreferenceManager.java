@@ -22,6 +22,7 @@ public class PreferenceManager {
     protected static final String PREF_NAME = "Lockitron";
     private static final String LOCATION_LONG_KEY = "LocationLong";
     private static final String LOCATION_LAT_KEY = "LocationLat";
+    private static final String LOCATION_ENABLED_KEY = "LocationEnabled";
     private final SharedPreferences prefs;
     private final Context mContext;
 
@@ -62,6 +63,17 @@ public class PreferenceManager {
 
     public String getLock() {
         return prefs.getString(LOCK_UUID, null);
+    }
+
+    public void setLocationEnabled(boolean enabled){
+        prefs
+                .edit()
+                .putBoolean(LOCATION_ENABLED_KEY, enabled)
+                .apply();
+    }
+
+    public boolean getLocationEnabled() {
+        return prefs.getBoolean(LOCATION_ENABLED_KEY, false);
     }
 
     public double getLocationLatitude() {

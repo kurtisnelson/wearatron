@@ -1,9 +1,11 @@
 package com.thisisnotajoke.wearatron.controller;
 
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -15,12 +17,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
+import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.LockListFragment;
 import com.thisisnotajoke.lockitron.PreferenceManager;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.wearatron.MobileDispatchService;
 import com.thisisnotajoke.wearatron.R;
+import com.thisisnotajoke.wearatron.ReceiveTransitionsIntentService;
 
 import javax.inject.Inject;
 
@@ -38,6 +42,9 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
 
     @Inject
     PreferenceManager mPreferenceManager;
+
+    @Inject
+    GeofenceManager mGeofenceManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +103,17 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
         String uuid = lock.getUUID();
         mLock = uuid;
         mPreferenceManager.setLock(uuid);
-        mPreferenceManager.requestBackup();
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, new Intent(this, ReceiveTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        new AsyncTask<PendingIntent, Void, Void>() {
+            @Override
+            protected Void doInBackground(PendingIntent... params) {
+                mGeofenceManager.setFenceLocation();
+                mGeofenceManager.registerGeofences(params[0]);
+                mPreferenceManager.requestBackup();
+                return null;
+            }
+        }.execute(pendingIntent);
         stopService(new Intent(this, MobileDispatchService.class));
 
 

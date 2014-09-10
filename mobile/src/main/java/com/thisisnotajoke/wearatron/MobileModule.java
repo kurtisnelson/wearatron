@@ -47,4 +47,9 @@ public final class MobileModule {
     Context provideContext() {
         return mContext;
     }
+
+    @Provides
+    GeofenceManager provideGeofenceManager(Context c) {
+        return new GeofenceManager(c);
+    }
 }

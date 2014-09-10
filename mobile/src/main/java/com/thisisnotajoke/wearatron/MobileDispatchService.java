@@ -21,7 +21,7 @@ import com.thisisnotajoke.lockitron.PreferenceManager;
 
 import javax.inject.Inject;
 
-public class MobileDispatchService extends WearableListenerService implements CommandTask.Callback, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, LocationClient.OnAddGeofencesResultListener {
+public class MobileDispatchService extends WearableListenerService implements CommandTask.Callback {
 
     private static final String ACTION_PATH = "/action";
     private static final String TAG = "WearDispatchService";
@@ -32,7 +32,6 @@ public class MobileDispatchService extends WearableListenerService implements Co
     PreferenceManager mPreferenceManager;
     @Inject
     GeofenceManager mGeofenceManager;
-    private LocationClient mLocationClient;
 
     @Override
     public void onCreate() {
@@ -46,9 +45,6 @@ public class MobileDispatchService extends WearableListenerService implements Co
         mToken = mPreferenceManager.getToken().getToken();
         mUUID = mPreferenceManager.getLock();
         Log.d(TAG, "onCreate");
-
-        mLocationClient = new LocationClient(this, this, this);
-        mLocationClient.connect();
     }
 
     @Override
@@ -66,11 +62,16 @@ public class MobileDispatchService extends WearableListenerService implements Co
             }else{
                 execute(CommandTask.UNLOCK);
             }
-            mPreferenceManager.setLocation(mLocationClient.getLastLocation());
-            Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
+            PendingIntent pendingIntent = PendingIntent.getService(this, 0, new Intent(this, ReceiveTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
-            PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            mLocationClient.addGeofences(mGeofenceManager.getGeofences(), pendingIntent, this);
+            new AsyncTask<PendingIntent, Void, Void>() {
+                @Override
+                protected Void doInBackground(PendingIntent... params) {
+                    mGeofenceManager.setFenceLocation();
+                    mGeofenceManager.registerGeofences(params[0]);
+                    return null;
+                }
+            }.execute(pendingIntent);
         }
     }
 
@@ -91,25 +92,5 @@ public class MobileDispatchService extends WearableListenerService implements Co
         } finally {
             Binder.restoreCallingIdentity(token);
         }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onDisconnected() {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onAddGeofencesResult(int i, String[] strings) {
-        Log.d(TAG, "added geofences" + strings);
     }
 }
