@@ -3,7 +3,7 @@
     android:id="@+id/activity_auth"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thisisnotajoke.wearatron.AuthActivity"
+    tools:context="com.thisisnotajoke.wearatron.controller.AuthActivity"
     tools:ignore="MergeRootFrame">
     <ProgressBar
         android:id="@+id/activitY_auth_progress"

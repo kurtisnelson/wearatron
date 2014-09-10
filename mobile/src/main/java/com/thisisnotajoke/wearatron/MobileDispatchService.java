@@ -9,16 +9,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.bignerdranch.android.support.util.InjectionUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.thisisnotajoke.lockitron.CommandTask;
+import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.PreferenceManager;
+
+import javax.inject.Inject;
 
 public class MobileDispatchService extends WearableListenerService implements CommandTask.Callback, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, LocationClient.OnAddGeofencesResultListener {
 
@@ -27,14 +28,17 @@ public class MobileDispatchService extends WearableListenerService implements Co
 
     private String mUUID;
     private String mToken;
-    private PreferenceManager mPreferenceManager;
+    @Inject
+    PreferenceManager mPreferenceManager;
+    @Inject
+    GeofenceManager mGeofenceManager;
     private LocationClient mLocationClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        InjectionUtils.injectClass(this);
 
-        mPreferenceManager = new PreferenceManager(this);
         if(mPreferenceManager.getToken() == null || mPreferenceManager.getLock() == null){
             Toast.makeText(this, "Please open the phone app, login, and select a lock", Toast.LENGTH_SHORT).show();
             stopSelf();
@@ -66,7 +70,7 @@ public class MobileDispatchService extends WearableListenerService implements Co
             Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
 
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            mLocationClient.addGeofences(mPreferenceManager.getGeofences(), pendingIntent, this);
+            mLocationClient.addGeofences(mGeofenceManager.getGeofences(), pendingIntent, this);
         }
     }
 

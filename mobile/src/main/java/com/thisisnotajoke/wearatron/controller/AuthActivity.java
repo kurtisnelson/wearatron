@@ -1,23 +1,29 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.wearatron.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.webkit.WebView;
 
 import com.thisisnotajoke.lockitron.Auth;
 import com.thisisnotajoke.lockitron.PreferenceManager;
+import com.thisisnotajoke.lockitron.controller.WearatronActivity;
+import com.thisisnotajoke.wearatron.R;
 
 import org.scribe.model.Token;
 
-public class AuthActivity extends FragmentActivity implements Auth.TokenCallback {
+import javax.inject.Inject;
+
+public class AuthActivity extends WearatronActivity implements Auth.TokenCallback {
+    @Inject
+    PreferenceManager mPreferenceManager;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        Token token = new PreferenceManager(this).getToken();
+        Token token = mPreferenceManager.getToken();
         if(token != null){
             success();
         }else {
@@ -31,7 +37,7 @@ public class AuthActivity extends FragmentActivity implements Auth.TokenCallback
 
     @Override
     public void token(Token token) {
-        new PreferenceManager(this).setToken(token);
+        mPreferenceManager.setToken(token);
         success();
     }
 
@@ -39,5 +45,10 @@ public class AuthActivity extends FragmentActivity implements Auth.TokenCallback
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    protected boolean usesInjection() {
+        return true;
     }
 }

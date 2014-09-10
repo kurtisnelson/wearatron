@@ -12,6 +12,8 @@ import org.scribe.model.Token;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PreferenceManager {
     private static final String TOKEN_SECRET = "Secret";
     private static final String TOKEN_TOKEN = "Token";
@@ -78,19 +80,6 @@ public class PreferenceManager {
                 .putString(LOCATION_LONG_KEY, String.valueOf(location.getLongitude()))
                 .putString(LOCATION_LAT_KEY, String.valueOf(location.getLatitude()))
                 .apply();
-    }
-
-    public List<Geofence> getGeofences() {
-        Geofence geofence = new Geofence.Builder()
-                .setRequestId(GeofenceManager.HINT_REQUEST_ID)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                .setCircularRegion(
-                        getLocationLatitude(), getLocationLongitude(), 500f)
-                .setExpirationDuration(86400000)
-                .build();
-        ArrayList<Geofence> list = new ArrayList<Geofence>();
-        list.add(geofence);
-        return list;
     }
 }
 

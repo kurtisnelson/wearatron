@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.wearatron.controller;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -7,7 +7,6 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,10 +16,15 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 import com.thisisnotajoke.lockitron.Lock;
-import com.thisisnotajoke.lockitron.LockListFragment;
+import com.thisisnotajoke.lockitron.controller.LockListFragment;
 import com.thisisnotajoke.lockitron.PreferenceManager;
+import com.thisisnotajoke.lockitron.controller.WearatronActivity;
+import com.thisisnotajoke.wearatron.MobileDispatchService;
+import com.thisisnotajoke.wearatron.R;
 
-public class MainActivity extends FragmentActivity implements LockListFragment.Callbacks, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+import javax.inject.Inject;
+
+public class MainActivity extends WearatronActivity implements LockListFragment.Callbacks, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private static final String DIALOG_ERROR = "dialog_error";
@@ -32,12 +36,14 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
     private boolean mResolvingError;
     private String mLock;
 
+    @Inject
+    PreferenceManager mPreferenceManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager preferenceManager = new PreferenceManager(this);
-        mToken = preferenceManager.getToken().getToken();
-        mLock = preferenceManager.getLock();
+        mToken = mPreferenceManager.getToken().getToken();
+        mLock = mPreferenceManager.getLock();
         setContentView(getLayoutResId());
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = createFragment();
@@ -89,9 +95,8 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
     public void onLockSelected(Lock lock) {
         String uuid = lock.getUUID();
         mLock = uuid;
-        PreferenceManager pm = new PreferenceManager(this);
-        pm.setLock(uuid);
-        pm.requestBackup();
+        mPreferenceManager.setLock(uuid);
+        mPreferenceManager.requestBackup();
         stopService(new Intent(this, MobileDispatchService.class));
 
 
@@ -174,5 +179,10 @@ public class MainActivity extends FragmentActivity implements LockListFragment.C
         public void onDismiss(DialogInterface dialog) {
             ((MainActivity)getActivity()).onDialogDismissed();
         }
+    }
+
+    @Override
+    protected boolean usesInjection() {
+        return true;
     }
 }

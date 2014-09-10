@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentManager;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thisisnotajoke.lockitron.Lock;
-import com.thisisnotajoke.lockitron.LockListFragment;
+import com.thisisnotajoke.lockitron.controller.LockListFragment;
 
 public class ConfigurationActivity extends FragmentActivity implements LockListFragment.Callbacks {
     private static final String TAG = "ConfigurationActivity";

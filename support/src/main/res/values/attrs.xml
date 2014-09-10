@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="WizardProgressView">
+        <attr name="stepColor" format="color"/>
+        <attr name="activeColor" format="color"/>
+        <attr name="barSpacing" format="dimension"/>
+        <attr name="barHeight" format="dimension"/>
+    </declare-styleable>
+</resources>

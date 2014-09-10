@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BNR Support Library</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="network_failure">No internet connection</string>
+    <string name="loading_title">Loading...</string>
+    <string name="loading_message">Please wait...</string>
+</resources>
