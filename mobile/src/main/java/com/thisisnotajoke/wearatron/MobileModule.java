@@ -2,16 +2,23 @@ package com.thisisnotajoke.wearatron;
 
 import android.content.Context;
 
+import com.bignerdranch.android.support.util.NetworkConnectivityManager;
 import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.PreferenceManager;
 import com.thisisnotajoke.lockitron.WearatronModule;
+import com.thisisnotajoke.lockitron.controller.LockListFragment;
 import com.thisisnotajoke.lockitron.model.DataManager;
+import com.thisisnotajoke.lockitron.model.LockStore;
+import com.thisisnotajoke.lockitron.model.LockitronWebService;
 import com.thisisnotajoke.wearatron.controller.AuthActivity;
 import com.thisisnotajoke.wearatron.controller.MainActivity;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
+import retrofit.RestAdapter;
 
 @Module(
         injects = {
@@ -22,6 +29,7 @@ import dagger.Provides;
                 //activity
                 AuthActivity.class,
                 MainActivity.class,
+                LockListFragment.class,
                 //service
                 MobileDispatchService.class,
         },
@@ -48,22 +56,35 @@ public final class MobileModule {
     }
 
     @Provides
-    Gson provideGson() {
-        return new Gson();
-    }
-
-    @Provides
     Context provideContext() {
         return mContext;
     }
 
     @Provides
-    DataManager provideDataManager(Context context, PreferenceManager preferenceManager, Gson gson) {
-        return new DataManager(context, preferenceManager, gson);
+    DataManager provideDataManager(Context context, PreferenceManager preferenceManager, Gson gson, LockitronWebService webservice, LockStore lockStore) {
+        return new DataManager(context, preferenceManager, gson, webservice, lockStore);
     }
 
     @Provides
-    GeofenceManager provideGeofenceManager(Context c) {
-        return new GeofenceManager(c);
+    @Singleton
+    LockitronWebService provideWebService(RestAdapter restAdapter) {
+        return restAdapter.create(LockitronWebService.class);
+    }
+
+    @Provides
+    @Singleton
+    LockStore provideLockStore() {
+        return new LockStore();
+    }
+
+
+    @Provides
+    NetworkConnectivityManager provideNetworkConnectivityManager(Context context) {
+        return new NetworkConnectivityManager(context);
+    }
+
+    @Provides
+    GeofenceManager provideGeofenceManager(Context c, PreferenceManager preferenceManager) {
+        return new GeofenceManager(c, preferenceManager);
     }
 }

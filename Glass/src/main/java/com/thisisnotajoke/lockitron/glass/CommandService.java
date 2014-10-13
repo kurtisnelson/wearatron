@@ -3,15 +3,15 @@ package com.thisisnotajoke.lockitron.glass;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.IBinder;
-import android.util.Log;
 
-import com.android.volley.VolleyError;
-import com.thisisnotajoke.lockitron.CommandTask;
+import com.bignerdranch.android.support.util.InjectionUtils;
+import com.thisisnotajoke.lockitron.model.DataManager;
+
+import javax.inject.Inject;
 
 
-public class CommandService extends Service implements CommandTask.Callback {
+public class CommandService extends Service {
     public static final String PREFS_NAME = "server";
     public static final String PREFS_UUID = "uuid";
     public static final String PREFS_TOKEN = "token";
@@ -19,9 +19,13 @@ public class CommandService extends Service implements CommandTask.Callback {
     private String lockUUID;
     private String token;
 
+    @Inject
+    protected DataManager mDataManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        InjectionUtils.injectClass(this);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         lockUUID = settings.getString(PREFS_UUID, null);
         token = settings.getString(PREFS_TOKEN, null);
@@ -30,14 +34,6 @@ public class CommandService extends Service implements CommandTask.Callback {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    protected void run(String c){
-        if(hasCredentials()){
-            new CommandTask(this.getApplicationContext(), token, lockUUID, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, c);
-            Log.d(TAG, "Executed task");
-        }
-        stopSelf();
     }
 
     private boolean hasCredentials() {
@@ -59,15 +55,5 @@ public class CommandService extends Service implements CommandTask.Callback {
         editor.putString("lock", lockUUID);
         editor.putString("token", token);
         editor.commit();
-    }
-
-    @Override
-    public void success(String lock) {
-
-    }
-
-    @Override
-    public void error(String lock, VolleyError error) {
-
     }
 }

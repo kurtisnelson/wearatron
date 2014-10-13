@@ -19,32 +19,37 @@ import javax.inject.Inject;
 public class GeofenceManager implements LocationClient.OnAddGeofencesResultListener, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
     public static final String HINT_REQUEST_ID = "HintRequest";
 
-    @Inject
-    PreferenceManager mPreferenceManager;
+    private PreferenceManager mPreferenceManager;
 
     private LocationClient mLocationClient;
 
-    public GeofenceManager(Context context) {
-        InjectionUtils.injectClass(context, this);
+    public GeofenceManager(Context context, PreferenceManager preferenceManager) {
+        mPreferenceManager = preferenceManager;
         mLocationClient = new LocationClient(context, this, this);
         mLocationClient.connect();
     }
 
     private List<Geofence> buildGeofences() {
+        Double lat = mPreferenceManager.getLocationLatitude();
+        Double lng = mPreferenceManager.getLocationLongitude();
+        ArrayList<Geofence> list = new ArrayList<Geofence>();
+        if(lat == null || lng == null)
+            return list;
         Geofence geofence = new Geofence.Builder()
                 .setRequestId(GeofenceManager.HINT_REQUEST_ID)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .setCircularRegion(
-                        mPreferenceManager.getLocationLatitude(), mPreferenceManager.getLocationLongitude(), 500f)
+                        lat, lng, 500f)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .build();
-        ArrayList<Geofence> list = new ArrayList<Geofence>();
         list.add(geofence);
         return list;
     }
 
     public void registerGeofences(PendingIntent intent) {
-        mLocationClient.addGeofences(buildGeofences(), intent, this);
+        List<Geofence> fences = buildGeofences();
+        if(fences.isEmpty()) return;
+        mLocationClient.addGeofences(fences, intent, this);
     }
 
     @Override

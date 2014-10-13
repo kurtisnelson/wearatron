@@ -2,31 +2,37 @@ package com.thisisnotajoke.lockitron.controller;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kelsonprime.lockitron.R;
 import com.thisisnotajoke.lockitron.Lock;
-import com.thisisnotajoke.lockitron.Lockitron;
 import com.thisisnotajoke.lockitron.User;
+import com.thisisnotajoke.lockitron.model.DataManager;
+import com.thisisnotajoke.lockitron.model.event.LockUpdatedEvent;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class LockListFragment extends ListFragment {
+import javax.inject.Inject;
+
+public class LockListFragment extends WearatronFragment implements AdapterView.OnItemClickListener {
     private static final String EXTRA_TOKEN = "TOKEN";
     private static final String EXTRA_LOCK = "LOCK.UUID";
     private static final String TAG = "LockListFragment";
-    private ArrayList<Lock> mLocks;
     private Callbacks mCallbacks;
     private ListView mListView;
     private String mSelectedUuid;
     private String mToken;
+
+    @Inject
+    protected DataManager mDataManager;
+    private LockAdapter mAdapter;
 
     public static LockListFragment newInstance(String token, Lock selectedLock) {
         Bundle args = new Bundle();
@@ -38,6 +44,14 @@ public class LockListFragment extends ListFragment {
         return fragment;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Lock lock = mAdapter.getItem(position);
+        mSelectedUuid = lock.getUUID();
+        mListView.setItemChecked(position, true);
+        mCallbacks.onLockSelected(lock);
+    }
+
     public interface Callbacks {
         void onLockSelected(Lock lock);
     }
@@ -45,14 +59,14 @@ public class LockListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mToken = getArguments().getString(EXTRA_TOKEN);
         mSelectedUuid = getArguments().getString(EXTRA_LOCK);
-        User lockitronUser = new Lockitron(getActivity().getApplicationContext()).user(mToken);
         Log.d(TAG, "My token is " + mToken);
-        mLocks = lockitronUser.getLocks();
-        LockAdapter adapter = new LockAdapter(mLocks);
-        lockitronUser.setLocksAdapter(adapter);
-        setListAdapter(adapter);
+        mDataManager.loadLocks();
+    }
+
+    public void onEventMainThread(LockUpdatedEvent e) {
+        mAdapter = new LockAdapter(mDataManager.getMyLocks());
+        mListView.setAdapter(mAdapter);
     }
 
     @Override
@@ -68,26 +82,19 @@ public class LockListFragment extends ListFragment {
     }
 
     public void updateUI() {
-        ((LockAdapter) getListAdapter()).notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_lock_list, container, false);
         mListView = (ListView) v.findViewById(android.R.id.list);
+        mListView.setOnItemClickListener(this);
         return v;
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Lock lock = ((LockAdapter) getListAdapter()).getItem(position);
-        mSelectedUuid = lock.getUUID();
-        mListView.setItemChecked(position, true);
-        mCallbacks.onLockSelected(lock);
-    }
-
     private class LockAdapter extends ArrayAdapter<Lock> {
-        public LockAdapter(ArrayList<Lock> locks){
+        public LockAdapter(List<Lock> locks){
             super(getActivity(), R.layout.list_item_lock, locks);
         }
 
@@ -108,5 +115,15 @@ public class LockListFragment extends ListFragment {
 
             return convertView;
         }
+    }
+
+    @Override
+    protected boolean usesInjection() {
+        return true;
+    }
+
+    @Override
+    protected boolean registerForEvents() {
+        return true;
     }
 }

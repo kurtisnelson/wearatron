@@ -7,28 +7,26 @@ import android.os.Binder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.bignerdranch.android.support.util.InjectionUtils;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
-import com.thisisnotajoke.lockitron.CommandTask;
 import com.thisisnotajoke.lockitron.GeofenceManager;
-import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.PreferenceManager;
+import com.thisisnotajoke.lockitron.model.DataManager;
 
 import javax.inject.Inject;
 
-public class MobileDispatchService extends WearableListenerService implements CommandTask.Callback {
+public class MobileDispatchService extends WearableListenerService {
 
     private static final String ACTION_PATH = "/action";
     private static final String TAG = "WearDispatchService";
 
-    private Lock mLock;
-    private String mToken;
     @Inject
     PreferenceManager mPreferenceManager;
     @Inject
     GeofenceManager mGeofenceManager;
+    @Inject
+    DataManager mDataManager;
 
     @Override
     public void onCreate() {
@@ -39,8 +37,6 @@ public class MobileDispatchService extends WearableListenerService implements Co
             Toast.makeText(this, "Please open the phone app, login, and select a lock", Toast.LENGTH_SHORT).show();
             stopSelf();
         }
-        mToken = mPreferenceManager.getToken().getToken();
-        mLock = mPreferenceManager.getLock();
         Log.d(TAG, "onCreate");
     }
 
@@ -53,11 +49,11 @@ public class MobileDispatchService extends WearableListenerService implements Co
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "Message: " + messageEvent.getPath());
-        if(messageEvent.getPath().equals(ACTION_PATH)){
-            if(messageEvent.getData()[0] == 0x1) {
-                execute(CommandTask.LOCK);
-            }else{
-                execute(CommandTask.UNLOCK);
+        if (messageEvent.getPath().equals(ACTION_PATH)) {
+            if (messageEvent.getData()[0] == 0x1) {
+                mDataManager.lockMyLock();
+            } else {
+                mDataManager.unlockMyLock();
             }
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, new Intent(this, ReceiveTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -69,25 +65,6 @@ public class MobileDispatchService extends WearableListenerService implements Co
                     return null;
                 }
             }.execute(pendingIntent);
-        }
-    }
-
-    @Override
-    public void success(String lock) {
-
-    }
-
-    @Override
-    public void error(String lock, VolleyError error) {
-        Log.e(TAG, "Volley Error", error);
-    }
-
-    private void execute(String command) {
-        long token = Binder.clearCallingIdentity();
-        try {
-            new CommandTask(this.getApplicationContext(), mToken, mLock.getUUID(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, command);
-        } finally {
-            Binder.restoreCallingIdentity(token);
         }
     }
 }

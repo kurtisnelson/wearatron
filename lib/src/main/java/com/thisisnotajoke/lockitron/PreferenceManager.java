@@ -82,17 +82,20 @@ public class PreferenceManager {
         return prefs.getBoolean(LOCATION_ENABLED_KEY, false);
     }
 
-    public double getLocationLatitude() {
+    public Double getLocationLatitude() {
         String latStr = prefs.getString(LOCATION_LAT_KEY, null);
+        if(latStr == null) return null;
         return Double.valueOf(latStr);
     }
 
-    public double getLocationLongitude() {
+    public Double getLocationLongitude() {
         String longStr = prefs.getString(LOCATION_LONG_KEY, null);
+        if(longStr == null) return null;
         return Double.valueOf(longStr);
     }
 
     public void setLocation(Location location) {
+        if(location == null) return;
         prefs
                 .edit()
                 .putString(LOCATION_LONG_KEY, String.valueOf(location.getLongitude()))
