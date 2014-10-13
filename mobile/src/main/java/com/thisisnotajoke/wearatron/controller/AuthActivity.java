@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 
-import com.thisisnotajoke.lockitron.Auth;
+import com.thisisnotajoke.lockitron.AuthenticationService;
 import com.thisisnotajoke.lockitron.PreferenceManager;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.wearatron.R;
@@ -14,7 +14,7 @@ import org.scribe.model.Token;
 
 import javax.inject.Inject;
 
-public class AuthActivity extends WearatronActivity implements Auth.TokenCallback {
+public class AuthActivity extends WearatronActivity implements AuthenticationService.TokenCallback {
     @Inject
     PreferenceManager mPreferenceManager;
 
@@ -27,8 +27,8 @@ public class AuthActivity extends WearatronActivity implements Auth.TokenCallbac
         if(token != null){
             success();
         }else {
-            Auth auth = new Auth(this);
-            findViewById(R.id.activitY_auth_progress).setVisibility(View.GONE);
+            AuthenticationService auth = new AuthenticationService(this);
+            findViewById(R.id.activity_auth_progress).setVisibility(View.GONE);
             WebView webView = (WebView) findViewById(R.id.activity_auth_webview);
             webView.setVisibility(View.VISIBLE);
             auth.getToken(this, webView);

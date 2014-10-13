@@ -16,10 +16,10 @@ import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 
-public class Auth {
+public class AuthenticationService {
     private static final String PREF_STORE = "LockitronOauth";
     public static final String REDIRECT_URI	= "http://localhost";
-    private static final String TAG = "Auth";
+    private static final String TAG = "AuthenticationService";
     private OAuthService mService;
     private TokenCallback mCallback;
 
@@ -27,9 +27,9 @@ public class Auth {
         public void token(Token token);
     }
 
-    public Auth(Context context) {
+    public AuthenticationService(Context context) {
         mService = new ServiceBuilder()
-                .provider(LockitronApi.class)
+                .provider(LockitronOAuthApi.class)
                 .apiKey(context.getString(R.string.oauth_id))
                 .apiSecret(context.getString(R.string.oauth_secret))
                 .signatureType(SignatureType.QueryString)
@@ -52,7 +52,7 @@ public class Auth {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "** in shouldOverrideUrlLoading(), url is: " + url);
-                if( url.startsWith(Auth.REDIRECT_URI) ) {
+                if( url.startsWith(AuthenticationService.REDIRECT_URI) ) {
                     Log.d(TAG, "Overridng loading");
                     // extract OAuth2 access_token appended in url
                     String code = Uri.parse(url).getQueryParameter("code");

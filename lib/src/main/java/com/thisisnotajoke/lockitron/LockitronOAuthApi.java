@@ -8,7 +8,7 @@ import org.scribe.model.Verb;
 import org.scribe.utils.OAuthEncoder;
 import org.scribe.utils.Preconditions;
 
-public class LockitronApi extends DefaultApi20 {
+public class LockitronOAuthApi extends DefaultApi20 {
     private static final String AUTHORIZATION_URL = "https://api.lockitron.com/oauth/authorize?client_id=%s&response_type=code&redirect_uri=%s";
 
     @Override

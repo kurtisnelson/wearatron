@@ -6,7 +6,7 @@
     tools:context="com.thisisnotajoke.wearatron.controller.AuthActivity"
     tools:ignore="MergeRootFrame">
     <ProgressBar
-        android:id="@+id/activitY_auth_progress"
+        android:id="@+id/activity_auth_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"/>
