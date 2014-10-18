@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.PreferenceManager;
 import com.thisisnotajoke.lockitron.WearatronModule;
-import com.thisisnotajoke.lockitron.controller.LockListFragment;
+import com.thisisnotajoke.wearatron.controller.LockListFragment;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.LockStore;
 import com.thisisnotajoke.lockitron.model.LockitronWebService;

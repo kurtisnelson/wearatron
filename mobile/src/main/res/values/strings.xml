@@ -5,4 +5,5 @@
     <string name="action_settings">Settings</string>
     <string name="lock_selected">Lock selected</string>
     <string name="list_instructions">Select a lock to control with your Wear device</string>
+    <string name="no_locks">There are no locks on your account</string>
 </resources>

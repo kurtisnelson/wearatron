@@ -19,7 +19,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.Lock;
-import com.thisisnotajoke.lockitron.controller.LockListFragment;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.wearatron.MobileDispatchService;
