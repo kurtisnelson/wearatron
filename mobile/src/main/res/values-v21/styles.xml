@@ -1,0 +1,5 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="android:Theme.Material">
+    </style>
+</resources>
