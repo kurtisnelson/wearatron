@@ -6,7 +6,7 @@ repositories {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '21'
+    buildToolsVersion '21.0.1'
 
     defaultConfig {
         minSdkVersion 16
@@ -23,7 +23,7 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.2.+'
     provided 'com.squareup.dagger:dagger-compiler:1.2.+'
     compile 'org.scribe:scribe:1.+'
-    compile "com.android.support:appcompat-v7:+"
+    compile "com.android.support:appcompat-v7:21.0.0"
     compile 'com.jakewharton:butterknife:5.1.+'
     compile 'com.google.android.gms:play-services-wearable:5.0.77'
     compile 'com.google.code.gson:gson:2.2.+'

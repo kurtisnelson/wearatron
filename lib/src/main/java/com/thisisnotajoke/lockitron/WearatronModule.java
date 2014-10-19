@@ -8,6 +8,9 @@ import com.google.gson.GsonBuilder;
 import com.kelsonprime.lockitron.BuildConfig;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.model.event.UnauthorizedException;
+import com.thisisnotajoke.lockitron.util.DateUtils;
+
+import org.joda.time.DateTime;
 
 import javax.inject.Singleton;
 
@@ -39,6 +42,7 @@ public final class WearatronModule {
     @Provides
     Gson provideGson() {
         return new GsonBuilder()
+                .registerTypeAdapter(DateTime.class, new DateUtils.DateTimeTypeAdapter())
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
     }

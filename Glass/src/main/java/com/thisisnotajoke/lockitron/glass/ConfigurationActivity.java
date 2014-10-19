@@ -3,19 +3,19 @@ package com.thisisnotajoke.lockitron.glass;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.model.DataManager;
-import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 
 import org.scribe.model.Token;
 
 import javax.inject.Inject;
 
-public class ConfigurationActivity extends WearatronActivity {
+public class ConfigurationActivity extends FragmentActivity {
     private static final String TAG = "ConfigurationActivity";
     private Token mToken;
     private Lock mLock;

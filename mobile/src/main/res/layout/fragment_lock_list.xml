@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAlignment="center"
+        android:textSize="18sp"
         android:text="@string/list_instructions"/>
     <ListView
         android:id="@android:id/list"

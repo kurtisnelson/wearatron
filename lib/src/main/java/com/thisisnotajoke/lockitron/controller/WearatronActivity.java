@@ -64,7 +64,7 @@ public class WearatronActivity extends ActionBarActivity {
     // override to be registered for events
     // onEvent() will be required to avoid errors
     protected boolean registerForEvents() {
-        return true;
+        return false;
     }
 
     /* Custom Fonts*/
