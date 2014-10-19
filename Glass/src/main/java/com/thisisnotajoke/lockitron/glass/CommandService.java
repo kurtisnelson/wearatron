@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 
-import com.bignerdranch.android.support.util.InjectionUtils;
+import com.thisisnotajoke.lockitron.util.InjectionUtils;
 import com.thisisnotajoke.lockitron.model.DataManager;
 
 import javax.inject.Inject;

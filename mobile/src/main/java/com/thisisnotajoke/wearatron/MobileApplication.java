@@ -1,9 +1,8 @@
 package com.thisisnotajoke.wearatron;
 
-import com.bignerdranch.android.support.BaseApplication;
+import com.thisisnotajoke.lockitron.WearatronApplication;
 
-public class MobileApplication extends BaseApplication {
-    @Override
+public class MobileApplication extends WearatronApplication {
     protected MobileModule getModule() {
         return new MobileModule(this);
     }

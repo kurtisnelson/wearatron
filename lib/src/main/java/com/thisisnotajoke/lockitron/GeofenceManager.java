@@ -5,16 +5,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.bignerdranch.android.support.util.InjectionUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
+import com.thisisnotajoke.lockitron.model.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 public class GeofenceManager implements LocationClient.OnAddGeofencesResultListener, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
     public static final String HINT_REQUEST_ID = "HintRequest";

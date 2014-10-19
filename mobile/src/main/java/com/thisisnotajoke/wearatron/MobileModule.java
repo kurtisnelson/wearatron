@@ -2,10 +2,9 @@ package com.thisisnotajoke.wearatron;
 
 import android.content.Context;
 
-import com.bignerdranch.android.support.util.NetworkConnectivityManager;
 import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.GeofenceManager;
-import com.thisisnotajoke.lockitron.PreferenceManager;
+import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.WearatronModule;
 import com.thisisnotajoke.wearatron.controller.LockListFragment;
 import com.thisisnotajoke.lockitron.model.DataManager;
@@ -75,12 +74,6 @@ public final class MobileModule {
     @Singleton
     LockStore provideLockStore() {
         return new LockStore();
-    }
-
-
-    @Provides
-    NetworkConnectivityManager provideNetworkConnectivityManager(Context context) {
-        return new NetworkConnectivityManager(context);
     }
 
     @Provides

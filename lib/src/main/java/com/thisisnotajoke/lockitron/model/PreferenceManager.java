@@ -1,21 +1,14 @@
-package com.thisisnotajoke.lockitron;
+package com.thisisnotajoke.lockitron.model;
 
 import android.app.backup.BackupManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
-import com.google.android.gms.location.Geofence;
 import com.google.gson.Gson;
+import com.thisisnotajoke.lockitron.Lock;
 
 import org.scribe.model.Token;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import retrofit.converter.GsonConverter;
 
 public class PreferenceManager {
     private static final String TOKEN_SECRET = "Secret";

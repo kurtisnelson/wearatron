@@ -1,8 +1,8 @@
-package com.bignerdranch.android.support.util;
+package com.thisisnotajoke.lockitron.util;
 
 import android.content.Context;
 
-import com.bignerdranch.android.support.BaseApplication;
+import com.thisisnotajoke.lockitron.WearatronApplication;
 
 public class InjectionUtils {
 
@@ -11,10 +11,10 @@ public class InjectionUtils {
     }
 
     public static void injectClass(Context context, Object obj) {
-        ((BaseApplication) context.getApplicationContext()).inject(obj);
+        ((WearatronApplication) context.getApplicationContext()).inject(obj);
     }
 
     public static <T> T get(Context context, Class<T> objectClass) {
-        return ((BaseApplication) context.getApplicationContext()).get(objectClass);
+        return ((WearatronApplication) context.getApplicationContext()).get(objectClass);
     }
 }

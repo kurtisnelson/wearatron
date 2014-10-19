@@ -16,8 +16,6 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.Lock;
-import com.thisisnotajoke.lockitron.PreferenceManager;
-import com.thisisnotajoke.lockitron.User;
 import com.thisisnotajoke.lockitron.model.event.LockUpdatedEvent;
 
 import org.scribe.model.Token;
@@ -95,6 +93,10 @@ public class DataManager {
 
     public Token getToken() {
         return mPreferenceManager.getToken();
+    }
+
+    public void setToken(Token token) {
+        mPreferenceManager.setToken(token);
     }
 
     private String toJson(Object obj) {

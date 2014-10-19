@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thisisnotajoke.lockitron.Lock;
-import com.thisisnotajoke.lockitron.PreferenceManager;
+import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 
 import org.scribe.model.Token;
@@ -21,7 +21,7 @@ public class ConfigurationActivity extends WearatronActivity {
     private Lock mLock;
 
     @Inject
-    PreferenceManager mPreferenceManager;
+    DataManager mDataManager;
 
     protected Fragment createFragment() {
         return null;
@@ -40,8 +40,8 @@ public class ConfigurationActivity extends WearatronActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
-        mToken = mPreferenceManager.getToken();
-        mLock = mPreferenceManager.getLock();
+        mToken = mDataManager.getToken();
+        mLock = mDataManager.getActiveLock();
         if(mToken == null || mToken.isEmpty())
             scan();
     }
@@ -69,8 +69,8 @@ public class ConfigurationActivity extends WearatronActivity {
     }
 
     private void savePreferences(){
-        mPreferenceManager.setToken(mToken);
-        mPreferenceManager.setLock(mLock);
+        mDataManager.setToken(mToken);
+        mDataManager.setActiveLock(mLock);
     }
 
     @Override

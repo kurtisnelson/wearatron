@@ -1,16 +1,23 @@
-package com.bignerdranch.android.support;
+package com.thisisnotajoke.lockitron;
 
 import android.app.Application;
 
 import dagger.ObjectGraph;
 
-public abstract class BaseApplication extends Application {
+public abstract class WearatronApplication extends Application {
 
-    private final String TAG = AppConstants.APP_TAG + getClass().getSimpleName();
-
-    private static BaseApplication instance;
+    private static WearatronApplication instance;
 
     protected ObjectGraph mObjectGraph;
+
+
+    public final void inject(Object object) {
+        mObjectGraph.inject(object);
+    }
+
+    public <T> T get(Class<T> klass) {
+        return mObjectGraph.get(klass);
+    }
 
     @Override
     public void onCreate() {
@@ -21,17 +28,12 @@ public abstract class BaseApplication extends Application {
         instance = this;
     }
 
-    public final void inject(Object object) {
-        mObjectGraph.inject(object);
-    }
-
-    public <T> T get(Class<T> klass) {
-        return mObjectGraph.get(klass);
-    }
 
     protected ObjectGraph createObjectGraph() {
         return ObjectGraph.create(getModule());
     }
+
+    protected abstract Object getModule();
 
     protected void setupDagger() {
         mObjectGraph = createObjectGraph();
@@ -40,7 +42,6 @@ public abstract class BaseApplication extends Application {
         }
     }
 
-    protected abstract Object getModule();
 
     protected boolean usesInjection() {
         return true;

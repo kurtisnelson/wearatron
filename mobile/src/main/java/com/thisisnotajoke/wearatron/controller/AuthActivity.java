@@ -6,7 +6,7 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.thisisnotajoke.lockitron.AuthenticationService;
-import com.thisisnotajoke.lockitron.PreferenceManager;
+import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.wearatron.R;
 

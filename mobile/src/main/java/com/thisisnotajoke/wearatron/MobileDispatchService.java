@@ -3,15 +3,14 @@ package com.thisisnotajoke.wearatron;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bignerdranch.android.support.util.InjectionUtils;
+import com.thisisnotajoke.lockitron.util.InjectionUtils;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.thisisnotajoke.lockitron.GeofenceManager;
-import com.thisisnotajoke.lockitron.PreferenceManager;
+import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.model.DataManager;
 
 import javax.inject.Inject;
