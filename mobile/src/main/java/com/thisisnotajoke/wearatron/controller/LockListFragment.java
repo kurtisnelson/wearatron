@@ -44,18 +44,6 @@ public class LockListFragment extends WearatronFragment implements AdapterView.O
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Lock lock = mAdapter.getItem(position);
-        mSelectedUuid = lock.getUUID();
-        mListView.setItemChecked(position, true);
-        mCallbacks.onLockSelected(lock);
-    }
-
-    public interface Callbacks {
-        void onLockSelected(Lock lock);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSelectedUuid = getArguments().getString(EXTRA_LOCK);
@@ -63,9 +51,12 @@ public class LockListFragment extends WearatronFragment implements AdapterView.O
         mAdapter = new LockAdapter(new ArrayList<Lock>());
     }
 
-    public void onEventMainThread(LockUpdatedEvent e) {
-        mAdapter = new LockAdapter(mDataManager.getMyLocks());
-        mListView.setAdapter(mAdapter);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_lock_list, container, false);
+        mListView = (ListView) v.findViewById(android.R.id.list);
+        mListView.setOnItemClickListener(this);
+        return v;
     }
 
     @Override
@@ -80,16 +71,23 @@ public class LockListFragment extends WearatronFragment implements AdapterView.O
         mCallbacks = null;
     }
 
-    public void updateUI() {
-        mAdapter.notifyDataSetChanged();
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Lock lock = mAdapter.getItem(position);
+        mSelectedUuid = lock.getUUID();
+        mListView.setItemChecked(position, true);
+        mCallbacks.onLockSelected(lock);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_lock_list, container, false);
-        mListView = (ListView) v.findViewById(android.R.id.list);
-        mListView.setOnItemClickListener(this);
-        return v;
+    public interface Callbacks {
+        void onLockSelected(Lock lock);
+    }
+
+
+
+    public void onEventMainThread(LockUpdatedEvent e) {
+        mAdapter = new LockAdapter(mDataManager.getMyLocks());
+        mListView.setAdapter(mAdapter);
     }
 
     private class LockAdapter extends ArrayAdapter<Lock> {
