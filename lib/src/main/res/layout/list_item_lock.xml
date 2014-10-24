@@ -3,11 +3,12 @@
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/lock_list_item_nameTextView"
+    android:id="@+id/list_item_lock_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:padding="4dp"
+    android:background="@drawable/item_activate_background"
     android:textColor="@color/list_item_text"
     android:textSize="20sp"
     tools:text="Test Lock" />

@@ -11,10 +11,9 @@
         android:textAlignment="center"
         android:textSize="18sp"
         android:text="@string/list_instructions"/>
-    <ListView
-        android:id="@android:id/list"
-        android:choiceMode="singleChoice"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_lock_list_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

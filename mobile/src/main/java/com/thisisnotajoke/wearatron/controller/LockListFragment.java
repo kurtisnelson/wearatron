@@ -2,18 +2,20 @@ package com.thisisnotajoke.wearatron.controller;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronFragment;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.event.LockUpdatedEvent;
+import com.thisisnotajoke.lockitron.util.RecyclerItemClickListener;
+import com.thisisnotajoke.lockitron.view.DividerItemDecoration;
+import com.thisisnotajoke.lockitron.view.LockViewAdapter;
 import com.thisisnotajoke.wearatron.R;
 
 import java.util.ArrayList;
@@ -21,17 +23,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class LockListFragment extends WearatronFragment implements AdapterView.OnItemClickListener {
+public class LockListFragment extends WearatronFragment implements RecyclerItemClickListener.OnItemClickListener {
     private static final String EXTRA_TOKEN = "TOKEN";
     private static final String EXTRA_LOCK = "LOCK.UUID";
     private static final String TAG = "LockListFragment";
     private Callbacks mCallbacks;
-    private ListView mListView;
     private String mSelectedUuid;
 
     @Inject
     protected DataManager mDataManager;
-    private LockAdapter mAdapter;
+    private LockViewAdapter mAdapter;
 
     public static LockListFragment newInstance(String token, Lock selectedLock) {
         Bundle args = new Bundle();
@@ -48,14 +49,19 @@ public class LockListFragment extends WearatronFragment implements AdapterView.O
         super.onCreate(savedInstanceState);
         mSelectedUuid = getArguments().getString(EXTRA_LOCK);
         mDataManager.loadLocks();
-        mAdapter = new LockAdapter(new ArrayList<Lock>());
+        mAdapter = new LockViewAdapter(new ArrayList<Lock>());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_lock_list, container, false);
-        mListView = (ListView) v.findViewById(android.R.id.list);
-        mListView.setOnItemClickListener(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.fragment_lock_list_list);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         return v;
     }
 
@@ -72,10 +78,12 @@ public class LockListFragment extends WearatronFragment implements AdapterView.O
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(View view, int position) {
+        Log.d(TAG, "onItemClick");
         Lock lock = mAdapter.getItem(position);
+        mAdapter.clearSelections();
+        mAdapter.setSelection(position, true);
         mSelectedUuid = lock.getUUID();
-        mListView.setItemChecked(position, true);
         mCallbacks.onLockSelected(lock);
     }
 
@@ -83,34 +91,14 @@ public class LockListFragment extends WearatronFragment implements AdapterView.O
         void onLockSelected(Lock lock);
     }
 
-
-
     public void onEventMainThread(LockUpdatedEvent e) {
-        mAdapter = new LockAdapter(mDataManager.getMyLocks());
-        mListView.setAdapter(mAdapter);
-    }
-
-    private class LockAdapter extends ArrayAdapter<Lock> {
-        public LockAdapter(List<Lock> locks){
-            super(getActivity(), R.layout.list_item_lock, locks);
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent){
-            if(null == convertView){
-                convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_lock, null);
+        List<Lock> locks = mDataManager.getMyLocks();
+        mAdapter.setData(locks);
+        if(mSelectedUuid != null) {
+            for(int i = 0; i < locks.size(); i++) {
+                if(locks.get(i).getUUID().equals(mSelectedUuid))
+                    mAdapter.setSelection(i, true);
             }
-
-            Lock l = getItem(position);
-
-            TextView titleTextView = (TextView) convertView.findViewById(R.id.lock_list_item_nameTextView);
-            titleTextView.setText(l.getName());
-
-            if(l.getUUID().equals(mSelectedUuid)){
-                mListView.setItemChecked(position, true);
-            }
-
-            return convertView;
         }
     }
 
