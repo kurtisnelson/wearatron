@@ -11,13 +11,13 @@ android {
         }
     }
     compileSdkVersion 21
-    buildToolsVersion '21.0.1'
+    buildToolsVersion '21.0.2'
     defaultConfig {
         applicationId "com.thisisnotajoke.wearatron"
         minSdkVersion 18
         targetSdkVersion 21
-        versionCode 8
-        versionName "1.2"
+        versionCode 9
+        versionName "1.2.1"
     }
 
     compileOptions {
