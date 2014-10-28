@@ -108,10 +108,30 @@ public class DataManager {
     }
 
     public void lockMyLock() {
-        mWebService.lockLock(getActiveLock().getUUID(), null);
+        mWebService.lockLock(getActiveLock().getUUID(), new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Lock lock failed", error);
+            }
+        });
     }
 
     public void unlockMyLock() {
-        mWebService.unlockLock(getActiveLock().getUUID(), null);
+        mWebService.unlockLock(getActiveLock().getUUID(), new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Unlock lock failed", error);
+            }
+        });
     }
 }
