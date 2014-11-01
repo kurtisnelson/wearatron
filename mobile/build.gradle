@@ -25,13 +25,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources true
-        }
-    }
-
     aaptOptions {
         noCompress "apk"
     }
@@ -43,6 +36,7 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
     compile 'com.google.android.gms:play-services-wearable:6.1.71'
+    compile "com.android.support:recyclerview-v7:21.0.0"
 }
 
 buildscript {

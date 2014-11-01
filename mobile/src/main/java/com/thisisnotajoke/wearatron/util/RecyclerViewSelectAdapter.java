@@ -1,4 +1,4 @@
-package com.thisisnotajoke.lockitron.util;
+package com.thisisnotajoke.wearatron.util;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;

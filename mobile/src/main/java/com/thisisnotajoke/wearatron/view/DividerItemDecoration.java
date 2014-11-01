@@ -1,4 +1,4 @@
-package com.thisisnotajoke.lockitron.view;
+package com.thisisnotajoke.wearatron.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -13,9 +13,9 @@ import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronFragment;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.event.LockUpdatedEvent;
-import com.thisisnotajoke.lockitron.util.RecyclerItemClickListener;
-import com.thisisnotajoke.lockitron.view.DividerItemDecoration;
-import com.thisisnotajoke.lockitron.view.LockViewAdapter;
+import com.thisisnotajoke.wearatron.util.RecyclerItemClickListener;
+import com.thisisnotajoke.wearatron.view.DividerItemDecoration;
+import com.thisisnotajoke.wearatron.view.LockViewAdapter;
 import com.thisisnotajoke.wearatron.R;
 
 import java.util.ArrayList;
