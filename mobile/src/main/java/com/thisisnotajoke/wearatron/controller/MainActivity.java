@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crittercism.app.Crittercism;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -48,6 +49,7 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crittercism.initialize(getApplicationContext(), "5457ff21bb9475497d000001");
         mToken = mDataManager.getToken().getToken();
         mLock = mDataManager.getActiveLock();
         setContentView(getLayoutResId());
