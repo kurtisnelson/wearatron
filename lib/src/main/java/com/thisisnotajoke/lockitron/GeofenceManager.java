@@ -55,11 +55,10 @@ public class GeofenceManager implements LocationClient.OnAddGeofencesResultListe
         mPreferenceManager.setLocationEnabled(true);
     }
 
-    /**
-     * Blocks until a location fix can be grabbed
-     */
     public void setFenceLocation() {
-        mPreferenceManager.setLocation(mLocationClient.getLastLocation());
+        if(mLocationClient.isConnected()) {
+            mPreferenceManager.setLocation(mLocationClient.getLastLocation());
+        }
     }
 
     @Override

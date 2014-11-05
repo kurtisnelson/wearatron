@@ -22,6 +22,7 @@ import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.lockitron.model.DataManager;
+import com.thisisnotajoke.wearatron.BuildConfig;
 import com.thisisnotajoke.wearatron.MobileDispatchService;
 import com.thisisnotajoke.wearatron.R;
 import com.thisisnotajoke.wearatron.ReceiveTransitionsIntentService;
@@ -49,7 +50,9 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Crittercism.initialize(getApplicationContext(), "5457ff21bb9475497d000001");
+        if(!BuildConfig.DEBUG) {
+            Crittercism.initialize(getApplicationContext(), "5457ff21bb9475497d000001");
+        }
         mToken = mDataManager.getToken().getToken();
         mLock = mDataManager.getActiveLock();
         setContentView(getLayoutResId());
