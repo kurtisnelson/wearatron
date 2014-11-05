@@ -2,4 +2,8 @@
 <resources>
     <color name="blue">#65C6FF</color>
     <color name="dark_blue">#339EDC</color>
+
+    <color name="primary">@color/blue</color>
+    <color name="primaryDark">@color/dark_blue</color>
+    <color name="accent">#ffff66</color>
 </resources>
