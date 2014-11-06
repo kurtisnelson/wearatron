@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Lockitron</string>
+    <string name="app_name">Wear-a-tron</string>
+    <string name="lockitron">Lockitron</string>
     <string name="lock">Lock</string>
     <string name="unlock">Unlock</string>
 </resources>

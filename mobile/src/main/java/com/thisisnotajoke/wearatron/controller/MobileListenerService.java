@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.wearatron.controller;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.thisisnotajoke.lockitron.model.WearDataApi;
 import com.thisisnotajoke.lockitron.util.InjectionUtils;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
@@ -15,9 +16,7 @@ import com.thisisnotajoke.lockitron.model.DataManager;
 
 import javax.inject.Inject;
 
-public class MobileDispatchService extends WearableListenerService {
-
-    private static final String ACTION_PATH = "/action";
+public class MobileListenerService extends WearableListenerService {
     private static final String TAG = "WearDispatchService";
 
     @Inject
@@ -48,7 +47,7 @@ public class MobileDispatchService extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "Message: " + messageEvent.getPath());
-        if (messageEvent.getPath().equals(ACTION_PATH)) {
+        if (messageEvent.getPath().equals(WearDataApi.ACTION_PATH)) {
             if (messageEvent.getData()[0] == 0x1) {
                 mDataManager.lockMyLock();
             } else {

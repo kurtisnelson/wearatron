@@ -23,9 +23,7 @@ import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.wearatron.BuildConfig;
-import com.thisisnotajoke.wearatron.MobileDispatchService;
 import com.thisisnotajoke.wearatron.R;
-import com.thisisnotajoke.wearatron.ReceiveTransitionsIntentService;
 
 import javax.inject.Inject;
 
@@ -117,7 +115,7 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
                 return null;
             }
         }.execute(pendingIntent);
-        stopService(new Intent(this, MobileDispatchService.class));
+        stopService(new Intent(this, MobileListenerService.class));
 
 
         Toast.makeText(this, R.string.lock_selected, Toast.LENGTH_SHORT).show();

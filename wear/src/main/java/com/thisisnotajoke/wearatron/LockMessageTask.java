@@ -11,11 +11,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
+import com.thisisnotajoke.lockitron.model.WearDataApi;
 
 import java.util.List;
 
 public class LockMessageTask extends AsyncTask<Boolean, Void, Boolean> implements GoogleApiClient.OnConnectionFailedListener {
-    private static final String ACTION_PATH = "/action";
     private static final String TAG = "MessageTask";
     private GoogleApiClient mClient;
     private final Context mContext;
@@ -36,15 +36,8 @@ public class LockMessageTask extends AsyncTask<Boolean, Void, Boolean> implement
         List<Node> nodes = Wearable.NodeApi.getConnectedNodes(mClient).await().getNodes();
         Log.d(TAG, "got nodes");
         for(Node node : nodes) {
-            byte[] payload;
-            if (command[0]) {
-                payload = new byte[]{0x1};
-            } else {
-                payload = new byte[]{0x0};
-            }
-
             Log.d(TAG, "Firing message to " + node);
-            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), ACTION_PATH, payload).await();
+            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), WearDataApi.ACTION_PATH, command[0] ? WearDataApi.ACTION_LOCK_PAYLOAD : WearDataApi.ACTION_UNLOCK_PAYLOAD).await();
             if (!result.getStatus().isSuccess()) {
                 Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
                 mClient.disconnect();

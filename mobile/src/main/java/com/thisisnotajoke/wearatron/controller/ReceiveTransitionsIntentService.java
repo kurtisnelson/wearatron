@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.wearatron.controller;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -12,12 +12,12 @@ import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.thisisnotajoke.lockitron.GeofenceManager;
+import com.thisisnotajoke.lockitron.model.WearDataApi;
 
 import java.util.List;
 
 public class ReceiveTransitionsIntentService extends IntentService implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "ReceiveTransitionsIntentService";
-    private static final String HINT_PATH = "/hint";
 
     public ReceiveTransitionsIntentService() {
         super("ReceiveTransitionsIntentService");
@@ -62,15 +62,9 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
         List<Node> nodes = Wearable.NodeApi.getConnectedNodes(mClient).await().getNodes();
         Log.d(TAG, "got nodes");
 
-        byte[] payload;
-        if (add) {
-            payload = new byte[]{0x1};
-        } else {
-            payload = new byte[]{0x0};
-        }
         for(Node node : nodes) {
             Log.d(TAG, "Firing message to " + node);
-            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), HINT_PATH, payload).await();
+            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), WearDataApi.HINT_PATH, add ? WearDataApi.HINT_ON_PAYLOAD : WearDataApi.HINT_OFF_PAYLOAD).await();
             if (!result.getStatus().isSuccess()) {
                 Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
                 mClient.disconnect();

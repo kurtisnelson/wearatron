@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.GeofenceManager;
+import com.thisisnotajoke.wearatron.controller.MobileListenerService;
+import com.thisisnotajoke.wearatron.model.MobileDataManager;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.WearatronModule;
 import com.thisisnotajoke.wearatron.controller.LockListFragment;
@@ -30,7 +32,7 @@ import retrofit.RestAdapter;
                 MainActivity.class,
                 LockListFragment.class,
                 //service
-                MobileDispatchService.class,
+                MobileListenerService.class,
         },
         includes = {
                 WearatronModule.class
@@ -61,7 +63,7 @@ public final class MobileModule {
 
     @Provides
     DataManager provideDataManager(Context context, PreferenceManager preferenceManager, Gson gson, LockitronWebService webservice, LockStore lockStore) {
-        return new DataManager(context, preferenceManager, gson, webservice, lockStore);
+        return new MobileDataManager(context, preferenceManager, gson, webservice, lockStore);
     }
 
     @Provides
