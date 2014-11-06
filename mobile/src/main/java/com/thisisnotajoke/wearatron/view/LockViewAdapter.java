@@ -53,7 +53,6 @@ public class LockViewAdapter extends RecyclerViewSelectAdapter<LockViewAdapter.L
     }
 
     public final static class LockViewHolder extends RecyclerView.ViewHolder {
-
         private final TextView mLabel;
 
         public LockViewHolder(View itemView, int viewType) {
