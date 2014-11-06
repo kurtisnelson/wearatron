@@ -30,4 +30,8 @@
 -dontwarn javax.xml.bind.DatatypeConverter
 -dontwarn org.apache.commons.codec.binary.Base64
 
+-keepclassmembers class ** {
+    public void onEvent*(**);
+}
+
 -keep class com.thisisnotajoke.lockitron.model.** { *; }

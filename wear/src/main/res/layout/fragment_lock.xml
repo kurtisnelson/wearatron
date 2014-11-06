@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <android.support.wearable.view.BoxInsetLayout
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:orientation="vertical">
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="15dp">
+
         <android.support.wearable.view.CircledImageView
             android:id="@+id/fragment_lock_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            app:circle_color="@color/blue"
+            android:layout_gravity="center"
+            app:layout_box="all"
+            app:circle_color="@color/wear_blue"
             app:circle_radius="58dp"
             app:circle_radius_pressed="60dp"/>
-
-        <TextView
-            android:id="@+id/fragment_lock_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:fontFamily="sans-serif-thin"
-            tools:text="Unlock" />
-        </LinearLayout>
-</android.support.wearable.view.BoxInsetLayout>
-
+    </android.support.wearable.view.BoxInsetLayout>
+    <TextView
+        android:id="@+id/fragment_lock_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-thin"
+        tools:text="Unlock" />
+</FrameLayout>
