@@ -10,12 +10,12 @@ android {
             storeFile file('/Users/kurt/BTSync/android-keystore')
         }
     }
-    compileSdkVersion 21
-    buildToolsVersion '21.1'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId "com.thisisnotajoke.wearatron"
         minSdkVersion 18
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 13
         versionName "1.3"
     }
@@ -47,7 +47,7 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
     compile 'com.google.android.gms:play-services-wearable:6.1.71'
-    compile "com.android.support:recyclerview-v7:21.0.0"
+    compile "com.android.support:recyclerview-v7:22.0.0"
 }
 
 buildscript {
