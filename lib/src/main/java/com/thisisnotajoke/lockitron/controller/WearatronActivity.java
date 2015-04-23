@@ -2,7 +2,7 @@ package com.thisisnotajoke.lockitron.controller;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import android.widget.Toast;
@@ -11,7 +11,7 @@ import com.thisisnotajoke.lockitron.util.InjectionUtils;
 
 import de.greenrobot.event.EventBus;
 
-public class WearatronActivity extends ActionBarActivity {
+public class WearatronActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -10,7 +10,7 @@ import com.thisisnotajoke.lockitron.model.WearDataApi;
 import com.thisisnotajoke.lockitron.util.InjectionUtils;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
-import com.thisisnotajoke.lockitron.GeofenceManager;
+import com.thisisnotajoke.wearatron.GeofenceManager;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.model.DataManager;
 

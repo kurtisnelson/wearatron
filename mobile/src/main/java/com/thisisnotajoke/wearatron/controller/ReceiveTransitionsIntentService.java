@@ -7,48 +7,40 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
-import com.thisisnotajoke.lockitron.GeofenceManager;
+import com.thisisnotajoke.wearatron.GeofenceManager;
 import com.thisisnotajoke.lockitron.model.WearDataApi;
 
 import java.util.List;
 
 public class ReceiveTransitionsIntentService extends IntentService implements GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = "ReceiveTransitionsIntentService";
+    private static final String TAG = "ReceiveTransitionsServ";
 
     public ReceiveTransitionsIntentService() {
-        super("ReceiveTransitionsIntentService");
+        super(TAG);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        // First check for errors
-        if (LocationClient.hasError(intent)) {
-            // Get the error code with a static method
-            int errorCode = LocationClient.getErrorCode(intent);
-            // Log the error
-            Log.e("ReceiveTransitionsIntentService",
-                    "Location Services error: " +
-                            Integer.toString(errorCode)
-            );
-        } else {
-            int transitionType = LocationClient.getGeofenceTransition(intent);
-            if(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER || transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
-                List<Geofence> triggerList = LocationClient.getTriggeringGeofences(intent);
-                for (Geofence g : triggerList) {
-                    if (g.getRequestId().equals(GeofenceManager.HINT_REQUEST_ID)) {
-                        pushHint(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER ? true : false);
-                    }
+        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        if (geofencingEvent.hasError()) {
+            Log.e(TAG, "Couldn't setup geofence " + geofencingEvent.getErrorCode());
+            return;
+        }
+
+        int transitionType = geofencingEvent.getGeofenceTransition();
+        if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER || transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            List<Geofence> triggerList = geofencingEvent.getTriggeringGeofences();
+            for (Geofence g : triggerList) {
+                if (g.getRequestId().equals(GeofenceManager.HINT_REQUEST_ID)) {
+                    pushHint(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER);
                 }
-            } else {
-                Log.e("ReceiveTransitionsIntentService",
-                        "Geofence transition error: " +
-                                Integer.toString(transitionType)
-                );
             }
+        } else {
+            Log.e(TAG, "Invalid transition type: " + transitionType);
         }
     }
 
@@ -61,8 +53,7 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
         Log.d(TAG, "Starting task");
         List<Node> nodes = Wearable.NodeApi.getConnectedNodes(mClient).await().getNodes();
         Log.d(TAG, "got nodes");
-
-        for(Node node : nodes) {
+        for (Node node : nodes) {
             Log.d(TAG, "Firing message to " + node);
             MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), WearDataApi.HINT_PATH, add ? WearDataApi.HINT_ON_PAYLOAD : WearDataApi.HINT_OFF_PAYLOAD).await();
             if (!result.getStatus().isSuccess()) {

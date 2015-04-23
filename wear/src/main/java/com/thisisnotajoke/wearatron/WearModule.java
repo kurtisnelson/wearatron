@@ -3,7 +3,6 @@ package com.thisisnotajoke.wearatron;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.lockitron.WearatronModule;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
@@ -19,7 +18,6 @@ import dagger.Provides;
         injects = {
                 WearApplication.class,
                 //lib
-                GeofenceManager.class,
                 PreferenceManager.class,
                 //activity
                 LaunchActivity.class,

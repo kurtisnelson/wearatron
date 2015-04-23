@@ -3,7 +3,6 @@ package com.thisisnotajoke.wearatron;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.thisisnotajoke.lockitron.GeofenceManager;
 import com.thisisnotajoke.wearatron.controller.MobileListenerService;
 import com.thisisnotajoke.wearatron.model.MobileDataManager;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;

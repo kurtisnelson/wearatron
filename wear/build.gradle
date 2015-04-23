@@ -12,8 +12,8 @@ android {
         applicationId "com.thisisnotajoke.wearatron"
         minSdkVersion 20
         targetSdkVersion 22
-        versionCode 6
-        versionName "2.0.1"
+        versionCode 7
+        versionName "2.1"
     }
 
     buildTypes {
@@ -37,7 +37,7 @@ android {
 dependencies {
     compile project(':lib')
     compile 'com.google.android.support:wearable:1.0.0'
-    compile 'com.google.android.gms:play-services-wearable:6.1.71'
+    compile 'com.google.android.gms:play-services-wearable:7.0.0'
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 }
