@@ -36,6 +36,7 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
             List<Geofence> triggerList = geofencingEvent.getTriggeringGeofences();
             for (Geofence g : triggerList) {
                 if (g.getRequestId().equals(GeofenceManager.HINT_REQUEST_ID)) {
+                    Log.d(TAG, "entered geofence, pushing hint");
                     pushHint(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER);
                 }
             }

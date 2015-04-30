@@ -99,7 +99,7 @@ public class GeofenceManager implements GoogleApiClient.ConnectionCallbacks, Goo
 
     @Override
     public void onResult(Status status) {
-        Log.d(TAG, "Geofence set " + status.getStatusMessage());
+        Log.d(TAG, "Geofence set " + status.toString());
         mPreferenceManager.setLocationEnabled(true);
     }
 }

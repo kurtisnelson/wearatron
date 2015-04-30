@@ -12,6 +12,7 @@ import com.google.android.gms.wearable.Wearable;
 import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.model.DataManager;
+import com.thisisnotajoke.lockitron.model.LockBody;
 import com.thisisnotajoke.lockitron.model.LockStore;
 import com.thisisnotajoke.lockitron.model.LockitronWebService;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
@@ -90,9 +91,11 @@ public class MobileDataManager implements DataManager {
     }
 
     public void lockMyLock() {
-        mWebService.lockLock(getActiveLock().getUUID(), new Callback<Void>() {
+        LockBody body = new LockBody();
+        body.state = "lock";
+        mWebService.updateLock(getActiveLock().getUUID(), body, new Callback<Lock>() {
             @Override
-            public void success(Void aVoid, Response response) {
+            public void success(Lock lock, Response response) {
 
             }
 
@@ -104,9 +107,11 @@ public class MobileDataManager implements DataManager {
     }
 
     public void unlockMyLock() {
-        mWebService.unlockLock(getActiveLock().getUUID(), new Callback<Void>() {
+        LockBody body = new LockBody();
+        body.state = "unlock";
+        mWebService.updateLock(getActiveLock().getUUID(), body, new Callback<Lock>() {
             @Override
-            public void success(Void aVoid, Response response) {
+            public void success(Lock lock, Response response) {
 
             }
 
