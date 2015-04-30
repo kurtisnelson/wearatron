@@ -5,11 +5,6 @@ repositories {
 }
 
 android {
-    signingConfigs {
-        config {
-            storeFile file('/Users/kurt/BTSync/android-keystore')
-        }
-    }
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
     defaultConfig {
@@ -46,8 +41,8 @@ dependencies {
     wearApp project(':wear')
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-    compile 'com.google.android.gms:play-services-location:7.0.0'
-    compile 'com.google.android.gms:play-services-wearable:7.0.0'
+    compile 'com.google.android.gms:play-services-location:7.3.0'
+    compile 'com.google.android.gms:play-services-wearable:7.3.0'
     compile "com.android.support:recyclerview-v7:22.1.0"
 }
 

@@ -8,45 +8,51 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.CapabilityApi;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.thisisnotajoke.lockitron.model.WearDataApi;
 
 import java.util.List;
+import java.util.Set;
 
 public class LockMessageTask extends AsyncTask<Boolean, Void, Boolean> implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "MessageTask";
-    private GoogleApiClient mClient;
+    private static final String API_CAPABILITY_NAME = "lockitron_web_api";
     private final Context mContext;
 
-    public LockMessageTask(Context c){
+    public LockMessageTask(Context c) {
         mContext = c;
     }
 
     @Override
     protected Boolean doInBackground(Boolean... command) {
         Log.d(TAG, "connecting...");
-        mClient = new GoogleApiClient.Builder(mContext)
+        GoogleApiClient mClient = new GoogleApiClient.Builder(mContext)
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
         mClient.blockingConnect();
         Log.d(TAG, "Starting task");
-        List<Node> nodes = Wearable.NodeApi.getConnectedNodes(mClient).await().getNodes();
-        Log.d(TAG, "got nodes");
-        for(Node node : nodes) {
-            Log.d(TAG, "Firing message to " + node);
-            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), WearDataApi.ACTION_PATH, command[0] ? WearDataApi.ACTION_LOCK_PAYLOAD : WearDataApi.ACTION_UNLOCK_PAYLOAD).await();
-            if (!result.getStatus().isSuccess()) {
-                Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
-                mClient.disconnect();
-                return false;
-            }
-            Log.d(TAG, "Sent message " + result.getStatus());
+        Set<Node> nodes = Wearable.CapabilityApi.getCapability(
+                mClient, API_CAPABILITY_NAME,
+                CapabilityApi.FILTER_REACHABLE).await().getCapability().getNodes();
+        String nodeId = pickBestNodeId(nodes);
+        if (nodeId == null) {
+            Log.e(TAG, "No capable node found");
+            return false;
         }
+        MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, nodeId, WearDataApi.ACTION_PATH, command[0] ? WearDataApi.ACTION_LOCK_PAYLOAD : WearDataApi.ACTION_UNLOCK_PAYLOAD).await();
         mClient.disconnect();
-        return true;
+
+        if (!result.getStatus().isSuccess()) {
+            Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
+            return false;
+        } else {
+            Log.d(TAG, "Sent message " + result.getStatus());
+            return true;
+        }
     }
 
     @Override
@@ -54,9 +60,9 @@ public class LockMessageTask extends AsyncTask<Boolean, Void, Boolean> implement
         super.onPostExecute(success);
         Intent intent = new Intent(mContext, ConfirmationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if(success){
+        if (success) {
             intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.SUCCESS_ANIMATION);
-        }else{
+        } else {
             intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE, ConfirmationActivity.FAILURE_ANIMATION);
 
         }
@@ -71,5 +77,16 @@ public class LockMessageTask extends AsyncTask<Boolean, Void, Boolean> implement
         intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, connectionResult.toString());
         mContext.startActivity(intent);
         cancel(true);
+    }
+
+    private String pickBestNodeId(Set<Node> nodes) {
+        String bestNodeId = null;
+        for (Node node : nodes) {
+            if (node.isNearby()) {
+                return node.getId();
+            }
+            bestNodeId = node.getId();
+        }
+        return bestNodeId;
     }
 }

@@ -52,14 +52,11 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
         mClient.blockingConnect();
         Log.d(TAG, "Starting task");
         List<Node> nodes = Wearable.NodeApi.getConnectedNodes(mClient).await().getNodes();
-        Log.d(TAG, "got nodes");
         for (Node node : nodes) {
             Log.d(TAG, "Firing message to " + node);
             MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), WearDataApi.HINT_PATH, add ? WearDataApi.HINT_ON_PAYLOAD : WearDataApi.HINT_OFF_PAYLOAD).await();
             if (!result.getStatus().isSuccess()) {
                 Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
-                mClient.disconnect();
-                return false;
             }
             Log.d(TAG, "Sent message " + result.getStatus());
         }
