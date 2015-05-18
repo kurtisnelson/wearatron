@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.crittercism.app.Crittercism;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,7 +21,6 @@ import com.thisisnotajoke.wearatron.GeofenceManager;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.lockitron.model.DataManager;
-import com.thisisnotajoke.wearatron.BuildConfig;
 import com.thisisnotajoke.wearatron.R;
 
 import javax.inject.Inject;
@@ -48,9 +46,6 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(!BuildConfig.DEBUG) {
-            Crittercism.initialize(getApplicationContext(), "5457ff21bb9475497d000001");
-        }
         mToken = mDataManager.getToken().getToken();
         mLock = mDataManager.getActiveLock();
         setContentView(getLayoutResId());
