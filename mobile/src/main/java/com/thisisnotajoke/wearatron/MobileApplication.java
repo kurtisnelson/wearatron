@@ -13,8 +13,6 @@ public class MobileApplication extends WearatronApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(!com.kelsonprime.lockitron.BuildConfig.DEBUG) {
-            Fabric.with(this, new Crashlytics());
-        }
+        Fabric.with(this, new Crashlytics());
     }
 }
