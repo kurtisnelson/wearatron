@@ -2,9 +2,6 @@ package com.thisisnotajoke.lockitron;
 
 import android.app.Application;
 
-import com.kelsonprime.lockitron.BuildConfig;
-import com.rollbar.android.Rollbar;
-
 import dagger.ObjectGraph;
 
 public abstract class WearatronApplication extends Application {
@@ -25,9 +22,6 @@ public abstract class WearatronApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(!BuildConfig.DEBUG) {
-            Rollbar.init(this, "93ec4c93e21746d38837141ccbb475a0", "production");
-        }
 
         setupDagger();
 
