@@ -50,6 +50,8 @@ public class GeofenceManager implements GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     public void registerGeofences(PendingIntent intent) {
+        if(!mGoogleApiClient.isConnected())
+            return;
         buildGeofences();
         if(mFenceList.isEmpty())
             return;
@@ -61,6 +63,8 @@ public class GeofenceManager implements GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     public void setFenceLocation() {
+        if(!mGoogleApiClient.isConnected())
+            return;
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (lastLocation != null) {
             mPreferenceManager.setLocation(lastLocation);

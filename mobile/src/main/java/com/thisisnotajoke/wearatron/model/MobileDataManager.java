@@ -54,7 +54,7 @@ public class MobileDataManager implements DataManager {
         PutDataMapRequest dataMap = PutDataMapRequest.create(WearDataApi.LOCK_ITEM_PATH);
         dataMap.getDataMap().putString(WearDataApi.LOCK_ITEM_KEY, mGson.toJson(lock));
         PutDataRequest request = dataMap.asPutDataRequest();
-        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient, request);
+        Wearable.DataApi.putDataItem(mGoogleApiClient, request);
     }
 
     public Lock getActiveLock() {
@@ -91,9 +91,12 @@ public class MobileDataManager implements DataManager {
     }
 
     public void lockMyLock() {
+        Lock lock = getActiveLock();
+        if(lock == null)
+            return;
         LockBody body = new LockBody();
         body.state = "lock";
-        mWebService.updateLock(getActiveLock().getUUID(), body, new Callback<Lock>() {
+        mWebService.updateLock(lock.getUUID(), body, new Callback<Lock>() {
             @Override
             public void success(Lock lock, Response response) {
 
@@ -107,9 +110,12 @@ public class MobileDataManager implements DataManager {
     }
 
     public void unlockMyLock() {
+        Lock lock = getActiveLock();
+        if(lock == null)
+            return;
         LockBody body = new LockBody();
         body.state = "unlock";
-        mWebService.updateLock(getActiveLock().getUUID(), body, new Callback<Lock>() {
+        mWebService.updateLock(lock.getUUID(), body, new Callback<Lock>() {
             @Override
             public void success(Lock lock, Response response) {
 
