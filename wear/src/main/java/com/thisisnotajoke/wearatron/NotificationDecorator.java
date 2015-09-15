@@ -42,7 +42,6 @@ public class NotificationDecorator {
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender();
 
-        wearableExtender.setBackground(BitmapFactory.decodeResource(context.getResources(), R.drawable.background));
 
         PendingIntent unlockPendingIntent = WearableDispatchService.getUnlockPendingIntent(context);
         PendingIntent lockPendingIntent = WearableDispatchService.getLockPendingIntent(context);
