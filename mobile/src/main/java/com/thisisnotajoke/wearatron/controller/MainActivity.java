@@ -1,15 +1,20 @@
 package com.thisisnotajoke.wearatron.controller;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,6 +35,7 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private static final String DIALOG_ERROR = "dialog_error";
     private static final String TAG = "MainActivity";
+    private static final int PERMISSION_REQUEST_LOCATION = 0;
 
     private String mToken;
 
@@ -98,8 +104,10 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     @Override
     public void onLockSelected(final Lock lock) {
         mLock = lock;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+        }
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, new Intent(this, ReceiveTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
         new AsyncTask<PendingIntent, Void, Void>() {
             @Override
             protected Void doInBackground(PendingIntent... params) {
@@ -158,6 +166,17 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
     @Override
     public void onConnectionSuspended(int i) {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    onLockSelected(mLock);
+                }
+            }
+        }
     }
 
     /* Creates a dialog for an error message */
