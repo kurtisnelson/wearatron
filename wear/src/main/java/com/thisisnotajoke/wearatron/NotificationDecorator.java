@@ -4,16 +4,19 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.thisisnotajoke.wearatron.controller.WearableDispatchService;
 
 public class NotificationDecorator {
-    public static enum Type {
+    public enum Type {
         HINT,
         PUSH
     };
+
+    private static final long[] VIBRATE_PATTERN = {0, 100};
 
     private static final int PRIMARY_ID = 0;
 
@@ -28,6 +31,7 @@ public class NotificationDecorator {
                 break;
             case PUSH:
                 notification.setPriority(Notification.PRIORITY_MAX);
+                notification.setVibrate(VIBRATE_PATTERN);
                 break;
         }
         notificationManager.notify(PRIMARY_ID, notification.build());
