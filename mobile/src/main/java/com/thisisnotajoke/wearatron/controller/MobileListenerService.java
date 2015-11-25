@@ -1,8 +1,6 @@
 package com.thisisnotajoke.wearatron.controller;
 
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,7 +8,6 @@ import com.thisisnotajoke.lockitron.model.WearDataApi;
 import com.thisisnotajoke.lockitron.util.InjectionUtils;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
-import com.thisisnotajoke.wearatron.GeofenceManager;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.model.DataManager;
 
@@ -21,8 +18,7 @@ public class MobileListenerService extends WearableListenerService {
 
     @Inject
     PreferenceManager mPreferenceManager;
-    @Inject
-    GeofenceManager mGeofenceManager;
+
     @Inject
     DataManager mDataManager;
 
@@ -53,16 +49,6 @@ public class MobileListenerService extends WearableListenerService {
             } else {
                 mDataManager.unlockMyLock();
             }
-            PendingIntent pendingIntent = PendingIntent.getService(this, 0, new Intent(this, ReceiveTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
-            new AsyncTask<PendingIntent, Void, Void>() {
-                @Override
-                protected Void doInBackground(PendingIntent... params) {
-                    mGeofenceManager.setFenceLocation();
-                    mGeofenceManager.registerGeofences(params[0]);
-                    return null;
-                }
-            }.execute(pendingIntent);
         }
     }
 }

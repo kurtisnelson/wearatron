@@ -53,7 +53,7 @@ public class MobileDataManager implements DataManager {
         mPreferenceManager.requestBackup();
         PutDataMapRequest dataMap = PutDataMapRequest.create(WearDataApi.LOCK_ITEM_PATH);
         dataMap.getDataMap().putString(WearDataApi.LOCK_ITEM_KEY, mGson.toJson(lock));
-        PutDataRequest request = dataMap.asPutDataRequest();
+        PutDataRequest request = dataMap.asPutDataRequest().setUrgent();
         Wearable.DataApi.putDataItem(mGoogleApiClient, request);
     }
 

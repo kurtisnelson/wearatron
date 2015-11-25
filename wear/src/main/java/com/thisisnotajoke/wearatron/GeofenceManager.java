@@ -2,6 +2,7 @@ package com.thisisnotajoke.wearatron;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
+import com.thisisnotajoke.wearatron.controller.ReceiveTransitionsIntentService;
 
 import java.util.ArrayList;
 
@@ -49,12 +51,14 @@ public class GeofenceManager implements GoogleApiClient.ConnectionCallbacks, Goo
         mFenceList.add(geofence);
     }
 
-    public void registerGeofences(PendingIntent intent) {
+    public void registerGeofences(Context context) {
         if(!mGoogleApiClient.isConnected())
             return;
         buildGeofences();
         if(mFenceList.isEmpty())
             return;
+        PendingIntent intent = PendingIntent.getService(context, 0, ReceiveTransitionsIntentService.newIntent(context), PendingIntent.
+                FLAG_UPDATE_CURRENT);
         LocationServices.GeofencingApi.addGeofences(
                 mGoogleApiClient,
                 getGeofencingRequest(),

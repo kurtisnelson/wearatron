@@ -24,7 +24,6 @@ import retrofit.RestAdapter;
         injects = {
                 MobileApplication.class,
                 //lib
-                GeofenceManager.class,
                 PreferenceManager.class,
                 //activity
                 AuthActivity.class,
@@ -75,10 +74,5 @@ public final class MobileModule {
     @Singleton
     LockStore provideLockStore() {
         return new LockStore();
-    }
-
-    @Provides
-    GeofenceManager provideGeofenceManager(Context c, PreferenceManager preferenceManager) {
-        return new GeofenceManager(c, preferenceManager);
     }
 }

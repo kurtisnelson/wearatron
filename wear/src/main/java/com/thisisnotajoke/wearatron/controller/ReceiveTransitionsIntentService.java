@@ -1,6 +1,7 @@
 package com.thisisnotajoke.wearatron.controller;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -13,6 +14,8 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.thisisnotajoke.wearatron.GeofenceManager;
 import com.thisisnotajoke.lockitron.model.WearDataApi;
+import com.thisisnotajoke.wearatron.NotificationDecorator;
+import com.thisisnotajoke.wearatron.R;
 
 import java.util.List;
 
@@ -36,8 +39,12 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
             List<Geofence> triggerList = geofencingEvent.getTriggeringGeofences();
             for (Geofence g : triggerList) {
                 if (g.getRequestId().equals(GeofenceManager.HINT_REQUEST_ID)) {
-                    Log.d(TAG, "entered geofence, pushing hint");
-                    pushHint(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER);
+                    String name = getString(R.string.lockitron);
+                    if(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
+                        NotificationDecorator.notify(this, NotificationDecorator.Type.HINT, name);
+                    } else {
+                        NotificationDecorator.cancel(this);
+                    }
                 }
             }
         } else {
@@ -45,28 +52,12 @@ public class ReceiveTransitionsIntentService extends IntentService implements Go
         }
     }
 
-    private boolean pushHint(boolean add) {
-        GoogleApiClient mClient = new GoogleApiClient.Builder(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
-        mClient.blockingConnect();
-        Log.d(TAG, "Starting task");
-        List<Node> nodes = Wearable.NodeApi.getConnectedNodes(mClient).await().getNodes();
-        for (Node node : nodes) {
-            Log.d(TAG, "Firing message to " + node);
-            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mClient, node.getId(), WearDataApi.HINT_PATH, add ? WearDataApi.HINT_ON_PAYLOAD : WearDataApi.HINT_OFF_PAYLOAD).await();
-            if (!result.getStatus().isSuccess()) {
-                Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
-            }
-            Log.d(TAG, "Sent message " + result.getStatus());
-        }
-        mClient.disconnect();
-        return true;
-    }
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, ReceiveTransitionsIntentService.class);
     }
 }

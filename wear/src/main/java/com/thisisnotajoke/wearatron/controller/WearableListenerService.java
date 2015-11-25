@@ -13,13 +13,8 @@ public class WearableListenerService extends com.google.android.gms.wearable.Wea
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "Message: " + messageEvent.getPath());
-        if(messageEvent.getPath().equals(WearDataApi.HINT_PATH)){
-            if(messageEvent.getData()[0] == WearDataApi.HINT_ON_PAYLOAD[0]) {
-                String name = getString(R.string.lockitron);
-                NotificationDecorator.notify(this, NotificationDecorator.Type.HINT, name);
-            }else {
-                NotificationDecorator.cancel(this);
-            }
+        if(messageEvent.getPath().equals(WearDataApi.LOCK_ITEM_PATH)){
+            NotificationDecorator.notify(this, NotificationDecorator.Type.PUSH, getString(R.string.app_name));
         }
     }
 }

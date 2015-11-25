@@ -8,7 +8,6 @@ import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.wearatron.controller.LaunchActivity;
 import com.thisisnotajoke.wearatron.controller.WearableDispatchService;
-import com.thisisnotajoke.wearatron.controller.WearableListenerService;
 import com.thisisnotajoke.wearatron.model.WearableDataManager;
 
 import dagger.Module;
@@ -22,7 +21,6 @@ import dagger.Provides;
                 //activity
                 LaunchActivity.class,
                 //service
-                WearableListenerService.class,
                 WearableDispatchService.class
         },
         includes = {
@@ -55,5 +53,10 @@ public final class WearModule {
 //    @Provides
     DataManager provideDataManager(Context context, Gson gson) {
         return new WearableDataManager(context, gson);
+    }
+
+    @Provides
+    GeofenceManager provideGeofenceManager(Context c, PreferenceManager preferenceManager) {
+        return new GeofenceManager(c, preferenceManager);
     }
 }
