@@ -1,14 +1,12 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.mobile;
 
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
-import com.thisisnotajoke.wearatron.controller.WearableDispatchService;
+import com.thisisnotajoke.mobile.controller.WearableDispatchService;
 
 public class NotificationDecorator {
     public enum Type {

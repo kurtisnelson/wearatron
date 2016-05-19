@@ -1,9 +1,7 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.wearatron.mobile;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.thisisnotajoke.lockitron.WearatronApplication;
-
-import io.fabric.sdk.android.Fabric;
 
 public class MobileApplication extends WearatronApplication {
     protected MobileModule getModule() {
@@ -13,6 +11,6 @@ public class MobileApplication extends WearatronApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+        FirebaseAnalytics.getInstance(this);
     }
 }

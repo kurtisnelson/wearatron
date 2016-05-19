@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron.util;
+package com.thisisnotajoke.wearatron.mobile.util;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

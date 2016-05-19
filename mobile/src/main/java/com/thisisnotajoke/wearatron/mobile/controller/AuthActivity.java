@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron.controller;
+package com.thisisnotajoke.wearatron.mobile.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.webkit.WebView;
 import com.thisisnotajoke.lockitron.AuthenticationService;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
-import com.thisisnotajoke.wearatron.R;
+import com.thisisnotajoke.wearatron.mobile.R;
 
 import org.scribe.model.Token;
 

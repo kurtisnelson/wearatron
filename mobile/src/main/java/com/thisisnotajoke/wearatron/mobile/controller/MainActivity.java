@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron.controller;
+package com.thisisnotajoke.wearatron.mobile.controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.lockitron.model.DataManager;
-import com.thisisnotajoke.wearatron.R;
+import com.thisisnotajoke.wearatron.mobile.R;
 
 import javax.inject.Inject;
 

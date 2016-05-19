@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron.model;
+package com.thisisnotajoke.mobile.model;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.WearDataApi;
-import com.thisisnotajoke.wearatron.controller.WearableDispatchService;
+import com.thisisnotajoke.mobile.controller.WearableDispatchService;
 
 import org.scribe.model.Token;
 

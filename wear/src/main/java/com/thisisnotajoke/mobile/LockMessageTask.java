@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.mobile;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,6 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.thisisnotajoke.lockitron.model.WearDataApi;
 
-import java.util.List;
 import java.util.Set;
 
 public class LockMessageTask extends AsyncTask<Boolean, Void, Boolean> implements GoogleApiClient.OnConnectionFailedListener {

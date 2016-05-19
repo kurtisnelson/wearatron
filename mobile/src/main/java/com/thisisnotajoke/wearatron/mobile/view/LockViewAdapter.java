@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron.view;
+package com.thisisnotajoke.wearatron.mobile.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kelsonprime.lockitron.R;
 import com.thisisnotajoke.lockitron.Lock;
-import com.thisisnotajoke.wearatron.util.RecyclerViewSelectAdapter;
+import com.thisisnotajoke.wearatron.mobile.R;
+import com.thisisnotajoke.wearatron.mobile.util.RecyclerViewSelectAdapter;
 
 import java.util.List;
 

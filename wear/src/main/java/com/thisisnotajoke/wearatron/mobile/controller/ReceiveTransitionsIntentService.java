@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron.controller;
+package com.thisisnotajoke.mobile.controller;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -9,13 +9,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
-import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.Wearable;
-import com.thisisnotajoke.wearatron.GeofenceManager;
-import com.thisisnotajoke.lockitron.model.WearDataApi;
-import com.thisisnotajoke.wearatron.NotificationDecorator;
-import com.thisisnotajoke.wearatron.R;
+import com.thisisnotajoke.mobile.GeofenceManager;
+import com.thisisnotajoke.mobile.NotificationDecorator;
+import com.thisisnotajoke.mobile.R;
 
 import java.util.List;
 

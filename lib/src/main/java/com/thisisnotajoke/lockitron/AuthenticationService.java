@@ -7,7 +7,8 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.kelsonprime.lockitron.R;
+
+import com.thisisnotajoke.wearatron.R;
 
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.SignatureType;

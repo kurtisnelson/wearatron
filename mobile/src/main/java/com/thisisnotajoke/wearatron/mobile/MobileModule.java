@@ -1,18 +1,18 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.wearatron.mobile;
 
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.thisisnotajoke.wearatron.controller.MobileListenerService;
-import com.thisisnotajoke.wearatron.model.MobileDataManager;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.WearatronModule;
-import com.thisisnotajoke.wearatron.controller.LockListFragment;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.LockStore;
 import com.thisisnotajoke.lockitron.model.LockitronWebService;
-import com.thisisnotajoke.wearatron.controller.AuthActivity;
-import com.thisisnotajoke.wearatron.controller.MainActivity;
+import com.thisisnotajoke.wearatron.mobile.controller.AuthActivity;
+import com.thisisnotajoke.wearatron.mobile.controller.LockListFragment;
+import com.thisisnotajoke.wearatron.mobile.controller.MainActivity;
+import com.thisisnotajoke.wearatron.mobile.controller.MobileListenerService;
+import com.thisisnotajoke.wearatron.mobile.model.MobileDataManager;
 
 import javax.inject.Singleton;
 

@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron.controller;
+package com.thisisnotajoke.wearatron.mobile.controller;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronFragment;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.event.LockUpdatedEvent;
-import com.thisisnotajoke.wearatron.util.RecyclerItemClickListener;
-import com.thisisnotajoke.wearatron.view.DividerItemDecoration;
-import com.thisisnotajoke.wearatron.view.LockViewAdapter;
-import com.thisisnotajoke.wearatron.R;
+import com.thisisnotajoke.wearatron.mobile.R;
+import com.thisisnotajoke.wearatron.mobile.util.RecyclerItemClickListener;
+import com.thisisnotajoke.wearatron.mobile.view.DividerItemDecoration;
+import com.thisisnotajoke.wearatron.mobile.view.LockViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

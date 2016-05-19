@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron.controller;
+package com.thisisnotajoke.wearatron.mobile.controller;
 
 import android.content.Intent;
 import android.util.Log;

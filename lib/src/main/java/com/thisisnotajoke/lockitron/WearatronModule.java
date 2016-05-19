@@ -5,10 +5,10 @@ import android.content.Context;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelsonprime.lockitron.BuildConfig;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
 import com.thisisnotajoke.lockitron.model.event.UnauthorizedException;
 import com.thisisnotajoke.lockitron.util.DateUtils;
+import com.thisisnotajoke.wearatron.BuildConfig;
 
 import org.joda.time.DateTime;
 

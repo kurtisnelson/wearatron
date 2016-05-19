@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "399265099380",
+    "firebase_url": "https://wearatron.firebaseio.com",
+    "project_id": "wearatron",
+    "storage_bucket": "wearatron.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399265099380:android:69fdaa7b89fde3f2",
+        "android_client_info": {
+          "package_name": "com.thisisnotajoke.wearatron"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399265099380-drmq0euttrhhafbql406td80csi6msam.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thisisnotajoke.wearatron",
+            "certificate_hash": "FE45AA847B1F4EAD4447EDC34E185766C8D94DC0"
+          }
+        },
+        {
+          "client_id": "399265099380-c27v94lokdi7o2ke6ssptbcch8ippnu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaoIE9EhiRHvmnmX2e3F8jWvKD6wRAY1c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399265099380-c27v94lokdi7o2ke6ssptbcch8ippnu6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

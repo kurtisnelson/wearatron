@@ -1,4 +1,4 @@
-package com.thisisnotajoke.wearatron;
+package com.thisisnotajoke.mobile;
 
 import android.content.Context;
 
@@ -6,9 +6,9 @@ import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.WearatronModule;
 import com.thisisnotajoke.lockitron.model.DataManager;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
-import com.thisisnotajoke.wearatron.controller.LaunchActivity;
-import com.thisisnotajoke.wearatron.controller.WearableDispatchService;
-import com.thisisnotajoke.wearatron.model.WearableDataManager;
+import com.thisisnotajoke.mobile.controller.LaunchActivity;
+import com.thisisnotajoke.mobile.controller.WearableDispatchService;
+import com.thisisnotajoke.mobile.model.WearableDataManager;
 
 import dagger.Module;
 import dagger.Provides;
