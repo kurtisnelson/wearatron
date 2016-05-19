@@ -2,4 +2,5 @@
 <resources>
     <string name="token_endpoint">https://api.lockitron.com/oauth/token</string>
     <string name="auth_endpoint">https://api.lockitron.com/oauth/authorize</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3452780314870157/6530231645</string>
 </resources>

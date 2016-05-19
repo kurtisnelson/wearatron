@@ -1,12 +1,15 @@
 package com.thisisnotajoke.wearatron.mobile.model;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.model.DataManager;
@@ -33,6 +36,7 @@ public class MobileDataManager implements DataManager {
     private final GoogleApiClient mGoogleApiClient;
     private final LockStore mLockStore;
     private final LockitronWebService mWebService;
+    private final FirebaseAnalytics mAnalytics;
 
     public MobileDataManager(Context c, PreferenceManager preferenceManager, Gson gson, LockitronWebService webService, LockStore lockStore) {
         mGson = gson;
@@ -44,6 +48,7 @@ public class MobileDataManager implements DataManager {
         mGoogleApiClient.connect();
         mWebService = webService;
         mLockStore = lockStore;
+        mAnalytics = FirebaseAnalytics.getInstance(c);
     }
 
     public void setActiveLock(Lock lock) {
@@ -75,7 +80,8 @@ public class MobileDataManager implements DataManager {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e(TAG, "Load Locks failed", error);
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Load locks failed");
+                FirebaseCrash.report(error);
             }
         });
     }
@@ -97,12 +103,15 @@ public class MobileDataManager implements DataManager {
         mWebService.updateLock(lock.getUUID(), body, new Callback<Lock>() {
             @Override
             public void success(Lock lock, Response response) {
-
+                Bundle bundle = new Bundle();
+                bundle.putString("TYPE", "lock");
+                mAnalytics.logEvent("ACTION", bundle);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e(TAG, "Lock lock failed", error);
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Lock lock failed");
+                FirebaseCrash.report(error);
             }
         });
     }
@@ -116,12 +125,15 @@ public class MobileDataManager implements DataManager {
         mWebService.updateLock(lock.getUUID(), body, new Callback<Lock>() {
             @Override
             public void success(Lock lock, Response response) {
-
+                Bundle bundle = new Bundle();
+                bundle.putString("TYPE", "unlock");
+                mAnalytics.logEvent("ACTION", bundle);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e(TAG, "Unlock lock failed", error);
+                FirebaseCrash.logcat(Log.ERROR, TAG, "Unlock lock failed");
+                FirebaseCrash.report(error);
             }
         });
     }

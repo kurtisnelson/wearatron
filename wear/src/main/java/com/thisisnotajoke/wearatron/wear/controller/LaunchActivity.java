@@ -1,4 +1,4 @@
-package com.thisisnotajoke.mobile.controller;
+package com.thisisnotajoke.wearatron.wear.controller;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -7,9 +7,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.thisisnotajoke.lockitron.controller.SimpleWearatronActivity;
-import com.thisisnotajoke.mobile.GeofenceManager;
-import com.thisisnotajoke.mobile.NotificationDecorator;
-import com.thisisnotajoke.mobile.R;
+import com.thisisnotajoke.wearatron.wear.R;
+import com.thisisnotajoke.wearatron.wear.GeofenceManager;
+import com.thisisnotajoke.wearatron.wear.NotificationDecorator;
 
 import javax.inject.Inject;
 

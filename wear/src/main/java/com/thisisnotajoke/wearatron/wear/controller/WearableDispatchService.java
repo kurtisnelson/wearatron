@@ -1,11 +1,12 @@
-package com.thisisnotajoke.mobile.controller;
+package com.thisisnotajoke.wearatron.wear.controller;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 
-import com.thisisnotajoke.mobile.LockMessageTask;
+import com.thisisnotajoke.wearatron.wear.LockMessageTask;
+
 
 public class WearableDispatchService extends IntentService {
     private static final String ACTION_LOCK = "com.thisisnotajoke.wearatron.action.LOCK";

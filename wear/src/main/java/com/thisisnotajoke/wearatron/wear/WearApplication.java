@@ -1,4 +1,4 @@
-package com.thisisnotajoke.mobile;
+package com.thisisnotajoke.wearatron.wear;
 
 import com.thisisnotajoke.lockitron.WearatronApplication;
 

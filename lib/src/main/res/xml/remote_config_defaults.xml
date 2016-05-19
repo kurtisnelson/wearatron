@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>lockitron_access_token_endpoint</key>
+        <value>https://api.lockitron.com/oauth/token?grant_type=authorization_code</value>
+    </entry>
+    <entry>
+        <key>lockitron_authorization_url</key>
+        <value>https://api.lockitron.com/oauth/authorize?client_id=%s&amp;response_type=code&amp;redirect_uri=%s</value>
+    </entry>
+    <entry>
+        <key>lockitron_oauth_key</key>
+        <value>29ccba7a576ef3576d5f8b62c6f84a422112de9befff53afa1bb57d22937416c</value>
+    </entry>
+    <entry>
+        <key>lockitron_oauth_secret</key>
+        <value>e730293c8d4f29c25f437105bb434afdd5365db7c54add7e8ae015c7b66ca620</value>
+    </entry>
+</defaultsMap>

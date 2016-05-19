@@ -1,4 +1,4 @@
-package com.thisisnotajoke.mobile;
+package com.thisisnotajoke.wearatron.wear;
 
 import android.content.Context;
 import android.content.Intent;

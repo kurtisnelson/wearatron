@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronActivity;
 import com.thisisnotajoke.lockitron.model.DataManager;
@@ -31,6 +33,12 @@ public class MainActivity extends WearatronActivity implements LockListFragment.
         manager.beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("B54F06E2D767C8650583569B58545302")
+                .build();
+        adView.loadAd(adRequest);
     }
 
     private Fragment createFragment() {

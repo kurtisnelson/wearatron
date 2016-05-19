@@ -1,4 +1,4 @@
-package com.thisisnotajoke.mobile.controller;
+package com.thisisnotajoke.wearatron.wear.controller;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -9,9 +9,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
-import com.thisisnotajoke.mobile.GeofenceManager;
-import com.thisisnotajoke.mobile.NotificationDecorator;
-import com.thisisnotajoke.mobile.R;
+import com.thisisnotajoke.wearatron.wear.GeofenceManager;
+import com.thisisnotajoke.wearatron.wear.NotificationDecorator;
+import com.thisisnotajoke.wearatron.wear.R;
 
 import java.util.List;
 

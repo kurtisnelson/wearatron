@@ -1,5 +1,7 @@
 package com.thisisnotajoke.lockitron;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
 import org.scribe.builder.api.DefaultApi20;
 import org.scribe.extractors.AccessTokenExtractor;
 import org.scribe.extractors.JsonTokenExtractor;
@@ -9,7 +11,7 @@ import org.scribe.utils.OAuthEncoder;
 import org.scribe.utils.Preconditions;
 
 public class LockitronOAuthApi extends DefaultApi20 {
-    private static final String AUTHORIZATION_URL = "https://api.lockitron.com/oauth/authorize?client_id=%s&response_type=code&redirect_uri=%s";
+    private static FirebaseRemoteConfig sRemoteConfig = FirebaseRemoteConfig.getInstance();
 
     @Override
     public Verb getAccessTokenVerb() {
@@ -18,14 +20,16 @@ public class LockitronOAuthApi extends DefaultApi20 {
 
     @Override
     public String getAccessTokenEndpoint() {
-        return "https://api.lockitron.com/oauth/token?grant_type=authorization_code";
+        return sRemoteConfig.getString("lockitron_access_token_endpoint");
     }
 
     @Override
     public String getAuthorizationUrl(OAuthConfig config)
     {
-        Preconditions.checkValidUrl(config.getCallback(), "Must provide a valid url as callback. Lockitron does not support OOB");
-        return String.format(AUTHORIZATION_URL, config.getApiKey(), OAuthEncoder.encode(config.getCallback()));
+        Preconditions.checkValidUrl(config.getCallback(),
+                "Must provide a valid url as callback. Lockitron does not support OOB");
+        return String.format(sRemoteConfig.getString("lockitron_authorization_url"),
+                config.getApiKey(), OAuthEncoder.encode(config.getCallback()));
     }
 
     @Override

@@ -11,7 +11,7 @@ public class LockStore {
     private Map<String,Lock> mLocks;
 
     public LockStore() {
-        mLocks = new HashMap<String, Lock>();
+        mLocks = new HashMap<>();
     }
 
     public void putLock(Lock lock) {
@@ -23,6 +23,6 @@ public class LockStore {
     }
 
     public List<Lock> all() {
-        return new ArrayList<Lock>(mLocks.values());
+        return new ArrayList<>(mLocks.values());
     }
 }

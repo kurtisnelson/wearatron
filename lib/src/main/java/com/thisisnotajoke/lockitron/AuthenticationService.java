@@ -7,7 +7,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.thisisnotajoke.wearatron.R;
 
 import org.scribe.builder.ServiceBuilder;
@@ -28,11 +28,12 @@ public class AuthenticationService {
         public void token(Token token);
     }
 
-    public AuthenticationService(Context context) {
+    public AuthenticationService() {
+        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
         mService = new ServiceBuilder()
                 .provider(LockitronOAuthApi.class)
-                .apiKey(context.getString(R.string.oauth_id))
-                .apiSecret(context.getString(R.string.oauth_secret))
+                .apiKey(remoteConfig.getString("lockitron_oauth_key"))
+                .apiSecret(remoteConfig.getString("lockitron_oauth_secret"))
                 .signatureType(SignatureType.QueryString)
                 .callback(REDIRECT_URI)
                 .build();

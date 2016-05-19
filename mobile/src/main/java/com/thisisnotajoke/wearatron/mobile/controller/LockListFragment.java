@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.thisisnotajoke.lockitron.Lock;
 import com.thisisnotajoke.lockitron.controller.WearatronFragment;
 import com.thisisnotajoke.lockitron.model.DataManager;
@@ -34,7 +35,7 @@ public class LockListFragment extends WearatronFragment implements RecyclerItemC
     protected DataManager mDataManager;
     private LockViewAdapter mAdapter;
 
-    public static LockListFragment newInstance(String token, Lock selectedLock) {
+    static LockListFragment newInstance(String token, Lock selectedLock) {
         Bundle args = new Bundle();
         args.putString(EXTRA_TOKEN, token);
         if(selectedLock != null)
@@ -50,6 +51,7 @@ public class LockListFragment extends WearatronFragment implements RecyclerItemC
         mSelectedUuid = getArguments().getString(EXTRA_LOCK);
         mDataManager.loadLocks();
         mAdapter = new LockViewAdapter(new ArrayList<Lock>());
+        FirebaseAnalytics.getInstance(getActivity()).logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
     }
 
     @Override

@@ -1,9 +1,11 @@
-package com.thisisnotajoke.mobile;
+package com.thisisnotajoke.wearatron.wear;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -14,7 +16,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.thisisnotajoke.lockitron.model.PreferenceManager;
-import com.thisisnotajoke.mobile.controller.ReceiveTransitionsIntentService;
+import com.thisisnotajoke.wearatron.wear.controller.ReceiveTransitionsIntentService;
 
 import java.util.ArrayList;
 
@@ -25,11 +27,13 @@ public class GeofenceManager implements GoogleApiClient.ConnectionCallbacks, Goo
 
     private PreferenceManager mPreferenceManager;
     private GoogleApiClient mGoogleApiClient;
+    private Context mContext;
 
 
     public GeofenceManager(Context context, PreferenceManager preferenceManager) {
+        mContext = context;
         mPreferenceManager = preferenceManager;
-        mFenceList= new ArrayList<>();
+        mFenceList = new ArrayList<>();
         buildGoogleApiClient(context);
         mGoogleApiClient.connect();
     }
@@ -38,7 +42,7 @@ public class GeofenceManager implements GoogleApiClient.ConnectionCallbacks, Goo
         mFenceList.clear();
         Double lat = mPreferenceManager.getLocationLatitude();
         Double lng = mPreferenceManager.getLocationLongitude();
-        if(lat == null || lng == null)
+        if (lat == null || lng == null)
             return;
         Geofence geofence = new Geofence.Builder()
                 .setRequestId(GeofenceManager.HINT_REQUEST_ID)
@@ -51,13 +55,17 @@ public class GeofenceManager implements GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     public void registerGeofences(Context context) {
-        if(!mGoogleApiClient.isConnected())
+        if (!mGoogleApiClient.isConnected())
             return;
         buildGeofences();
-        if(mFenceList.isEmpty())
+        if (mFenceList.isEmpty())
             return;
         PendingIntent intent = PendingIntent.getService(context, 0, ReceiveTransitionsIntentService.newIntent(context), PendingIntent.
                 FLAG_UPDATE_CURRENT);
+        if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         LocationServices.GeofencingApi.addGeofences(
                 mGoogleApiClient,
                 getGeofencingRequest(),
@@ -66,8 +74,12 @@ public class GeofenceManager implements GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     public void setFenceLocation() {
-        if(!mGoogleApiClient.isConnected())
+        if (!mGoogleApiClient.isConnected())
             return;
+        if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (lastLocation != null) {
             mPreferenceManager.setLocation(lastLocation);

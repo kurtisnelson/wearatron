@@ -27,7 +27,7 @@ public class AuthActivity extends WearatronActivity implements AuthenticationSer
         if(token != null){
             success();
         }else {
-            AuthenticationService auth = new AuthenticationService(this);
+            AuthenticationService auth = new AuthenticationService();
             findViewById(R.id.activity_auth_progress).setVisibility(View.GONE);
             WebView webView = (WebView) findViewById(R.id.activity_auth_webview);
             webView.setVisibility(View.VISIBLE);
