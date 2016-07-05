@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 24
+    buildToolsVersion '24'
     defaultConfig {
         applicationId "com.thisisnotajoke.wearatron"
         minSdkVersion 18
-        targetSdkVersion 23
-        versionCode 20
-        versionName "1.4"
+        targetSdkVersion 24
+        versionCode 21
+        versionName "1.5"
     }
     buildTypes {
         release {
@@ -33,10 +33,10 @@ dependencies {
     wearApp project(':wear')
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.google.android.gms:play-services-wearable:9.0.0'
-    compile 'com.google.firebase:firebase-core:9.0.0'
-    compile 'com.google.firebase:firebase-crash:9.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile 'com.google.android.gms:play-services-wearable:9.2.0'
+    compile 'com.google.firebase:firebase-core:9.2.0'
+    compile 'com.google.firebase:firebase-crash:9.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
